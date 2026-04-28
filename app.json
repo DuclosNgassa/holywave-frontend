@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "HolyWave",
-    "slug": "mobile",
+    "slug": "HolyWave",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -48,6 +48,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "dde14699-d704-4fa6-bdb7-2e09bc36ec2b"
+      }
+    },
+    "owner": "ducloss-organization"
   }
 }
