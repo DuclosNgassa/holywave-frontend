@@ -6,21 +6,21 @@ import { AntDesign, Feather } from '@expo/vector-icons';
 import { Image } from "expo-image";
 import { formatNumber } from '@/utils/formatters';
 import ShareButton from './ShareButton';
+import { getOptimizedImage } from '@/utils/helper';
+import { ImageSize } from '@/app/models/types';
 
 interface PostCardProps {
     post: any;
     onLike: (postId: string) => void;
     onSelectEvent: (postId: string) => void;
     isLiked?: boolean;
-    onShareEvent: (
-        title: string,
-        message: string,
-        failOnCancel: boolean,
-        url?: string,
-    ) => void;
+    imageSize: ImageSize;
 }
 
-const PostCard = ({ onLike, onSelectEvent, post, isLiked, onShareEvent }: PostCardProps) => {
+const PostCard = ({ onLike, onSelectEvent, post, isLiked, imageSize }: PostCardProps) => {
+
+    const newUri = getOptimizedImage(post.image, imageSize);
+    console.log("New Uri: ", newUri);
 
     return (
         <View style={recipeCardStyles.container}
@@ -29,14 +29,16 @@ const PostCard = ({ onLike, onSelectEvent, post, isLiked, onShareEvent }: PostCa
                 onPress={() => onSelectEvent(post.id)}
                 activeOpacity={0.8}
             >
-                <View style={recipeCardStyles.imageContainer}>
+                {post.image && (<View style={recipeCardStyles.imageContainer}>
                     <Image
-                        source={{ uri: post.image }}
+                        source={{ uri: newUri }}
                         style={recipeCardStyles.image}
                         contentFit="cover"
                         transition={300}
+                        recyclingKey={post.id}
+                        allowDownscaling={true}
                     />
-                </View>
+                </View>)}
             </TouchableOpacity>
 
             <View style={recipeCardStyles.content}>
@@ -54,7 +56,7 @@ const PostCard = ({ onLike, onSelectEvent, post, isLiked, onShareEvent }: PostCa
                         <Feather name="dollar-sign" size={14} color={COLORS.textLight} />
                         <Text style={recipeCardStyles.feeText}>{post.fee ? post.fee : 'FREE'}</Text>
                     </View>
-                    <View  style={recipeCardStyles.feeContainer}>
+                    <View style={recipeCardStyles.feeContainer}>
                         <TouchableOpacity onPress={() => onLike(post.id)}>
                             <View style={recipeCardStyles.footerIconContainer}>
                                 {isLiked ? (
@@ -66,7 +68,7 @@ const PostCard = ({ onLike, onSelectEvent, post, isLiked, onShareEvent }: PostCa
                             </View>
                         </TouchableOpacity>
                         <View style={{ width: 10 }} />
-                        <ShareButton 
+                        <ShareButton
                             title={post.title}
                             message='Check out this awesome event'
                             url={post.image}

@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, TextInput, RefreshControl, ActivityIndicator } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useUserSync } from '@/hooks/useUserSync';
 import { Feather } from '@expo/vector-icons';
 import styles from '@/assets/styles/home.styles.js';
@@ -14,6 +14,7 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNearbyPost } from '@/hooks/useNearbyPost';
 import { FlashList } from "@shopify/flash-list";
+import { ImageSize } from '../models/types';
 
 const HomeScreen = () => {
   useUserSync();
@@ -37,11 +38,17 @@ const HomeScreen = () => {
   }
 
   const [searchParam, setSearchParam] = useState<string>("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [categoryParam, setCategoryParam] = useState<string>("");
 
   const { categoriesData, isLoadingCategories, errorCategories } = useCategory();
   const { currentUser } = useCurrentUser();
-  const { posts, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching, isRefetching, isLoadingPosts, errorPosts, refetchPosts, toggleLike, checkIsLiked } = usePost({ searchParam, categoryParam });
+  const postParams = useMemo(() => ({
+    searchParam: debouncedSearch,
+    categoryParam,
+  }), [debouncedSearch, categoryParam]);
+
+  const { posts, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching, isRefetching, isLoadingPosts, errorPosts, refetchPosts, toggleLike, checkIsLiked } = usePost({ categoryParam:postParams.categoryParam, searchParam: postParams.searchParam });
   const { nearbyPosts, isLoading, error: errorNearbyPost, refetch: refetchNearbyPosts } = useNearbyPost();
 
   if (isLoadingCategories) {
@@ -58,25 +65,32 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      Promise.all([
-        refetchPosts(), // Refetch data when the screen is focused
-        refetchNearbyPosts(),
-      ])
+      let isActive = true;
+      const fetchData = async () => {
+        await Promise.all([
+          refetchPosts(), // Refetch data when the screen is focused
+          refetchNearbyPosts(),
+        ]);
+      };
+
+      fetchData();
+
+      return () => {
+        isActive = false;
+      };
     }, [refetchPosts, refetchNearbyPosts])
   );
 
   // Refetch every time user types a character (debounced)
   useEffect(() => {
     const timeout = setTimeout(() => {
-      refetchPosts();
-    }, 400); // 400ms debounce for better UX
+      setDebouncedSearch(searchParam);
+      console.log(debouncedSearch)
+      console.log("postParams: ", postParams);
+    }, 400);
+  
     return () => clearTimeout(timeout);
-  }, [searchParam, refetchPosts])
-
-  useEffect(() => {
-    refetchPosts();
-  }, [categoryParam, refetchPosts]
-  )
+  }, [searchParam]);
 
   if (isLoadingPosts && !refreshing) {
     return <LoadingSpinner message="Loading events..." />;
@@ -140,16 +154,20 @@ const HomeScreen = () => {
                 onSelectEvent={onSelectEvent}
                 post={item}
                 onLike={toggleLike}
-                isLiked={item.liked} onShareEvent={function (title: string, message: string, failOnCancel: boolean, url?: string): void {
-                  throw new Error('Function not implemented.');
-                } }              />
+                isLiked={item.liked}
+                imageSize={ImageSize.Small}
+              />
             )}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             contentContainerStyle={styles.recipesGrid}
             showsVerticalScrollIndicator={false}
-            onEndReachedThreshold={0.1}
-            onEndReached={() => hasNextPage && !isFetchingNextPage && fetchNextPage()}
+            onEndReachedThreshold={0.3}
+            onEndReached={() => {
+              if (hasNextPage && !isFetchingNextPage) {
+                fetchNextPage();
+              }
+            }}
             refreshControl={
               <RefreshControl
                 refreshing={refreshing}

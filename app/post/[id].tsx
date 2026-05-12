@@ -13,6 +13,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import { usePost } from '@/hooks/usePost';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import ShareButton from '@/components/ShareButton';
+import { getOptimizedImage } from '@/utils/helper';
+import { ImageSize } from '../models/types';
 
 const PostDetailScreen = () => {
     const router = useRouter();
@@ -58,9 +60,11 @@ const PostDetailScreen = () => {
             >
                 <View>
                     {/**HEADER */}
+
+                    {/** TODO  Check if post has image otherwise display default image */}
                     <View style={styles.headerContainer}>
                         <Image
-                            source={{ uri: post.image }}
+                            source={{ uri: getOptimizedImage(post.image, ImageSize.Small) }}
                             style={styles.headerImage}
                             contentFit='cover'
                         />

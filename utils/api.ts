@@ -5,10 +5,11 @@ import { Post } from "@/app/models/post";
 //const API_BASE_URL = "http://localhost:5001/api";
 //const API_BASE_URL = "http://localhost:8080/api/v1";
 
-const API_BASE_URL = "http://54.93.235.161:8080/api/v1"; // AWS-EC2
+//const API_BASE_URL = "http://54.93.235.161:8080/api/v1"; // AWS-EC2
+const apiBaseUrl = process.env.EXPO_PUBLIC_API_BASE_URL;
 
 export const createApiClient = (getToken: (options?: any) => Promise<string | null>): AxiosInstance => {
-    const api = axios.create({ baseURL: API_BASE_URL });
+    const api = axios.create({ baseURL: apiBaseUrl });
 
     api.interceptors.request.use(async (config) => {
         const token = await getToken({ template: "long_lived" });

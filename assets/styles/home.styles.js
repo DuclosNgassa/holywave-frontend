@@ -139,8 +139,8 @@ const homeStyles = StyleSheet.create({
         shadowOpacity: 0.15,
     },
     categoryImage: {
-        width: 30,
-        height: 30,
+        width: 40,
+        height: 40,
         borderRadius: 20,
         backgroundColor: COLORS.border,
     },
@@ -215,8 +215,13 @@ export const recipeCardStyles = StyleSheet.create({
         overflow: "hidden",
     },
     imageContainer: {
-        position: "relative",
+/*         position: "relative",
         height: 150,
+ */    
+        width: "100%",
+        //height: "140",
+        aspectRatio: 1, 
+        overflow: "hidden",
     },
     image: {
         width: "100%",
@@ -328,8 +333,8 @@ export const nearbyCardStyles = StyleSheet.create({
         height: 50,
     },
     image: {
-        width: "100",
-        height: "100",
+        width: "100%",
+        height: "100%",
         backgroundColor: COLORS.border,
     },
     title: {

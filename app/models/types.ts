@@ -46,3 +46,9 @@ export interface User {
 export type UploadImageResponse = {
     url: string;
 };
+
+export enum ImageSize {
+    Small = "SMALL",
+    Medium = "MEDIUM",
+    Big = "BIG",
+ };

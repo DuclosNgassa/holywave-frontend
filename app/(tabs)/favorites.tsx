@@ -15,7 +15,7 @@ import SignOutButton from '@/components/SignOutButton';
 const FavoritesScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const { currentUser } = useCurrentUser();
-  const { postsUser, postsLiked, postsBookmarked, toggleLike, toggleBookmark, refetchPostsUser, refetchPostsLiked, refetchPostsBookmarked, isLoadingPostsUser, isLoadingPostLiked, isLoadingBookmarked, errorPostsUser, deletePost } = usePost({ userId: currentUser.id });
+  const { postsUser, postsLiked, postsBookmarked, toggleLike, toggleBookmark, refetchPostsUser, refetchPostsLiked, refetchPostsBookmarked, isLoadingPostsUser, isLoadingPostLiked, isLoadingBookmarked, errorPostsUser, deletePost } = usePost({ userId: currentUser?.id });
 
   const [favoritSelected, setFavoritSelected] = useState(true);
   const [bookMarkSelected, setBookMarkSelected] = useState(false);
@@ -125,7 +125,7 @@ const FavoritesScreen = () => {
                 onRefresh={onRefresh}
                 tintColor={COLORS.primary} />
             }
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item?.id.toString()}
             ListEmptyComponent={<View style={styles.emptyState}>
               <FontAwesome6 name='calendar' size={64} color={COLORS.textLight} />
               <Text style={styles.emptyTitle}>No favorite events yet</Text>
@@ -154,7 +154,7 @@ const FavoritesScreen = () => {
                 onRefresh={onRefresh}
                 tintColor={COLORS.primary} />
             }
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item?.id.toString()}
             ListEmptyComponent={<View style={styles.emptyState}>
               <FontAwesome6 name='bookmark' regular size={64} color={COLORS.textLight} />
               <Text style={styles.emptyTitle}>No favorite events yet</Text>
@@ -184,7 +184,7 @@ const FavoritesScreen = () => {
             }
             contentContainerStyle={{ gap: 5 }}
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item) => item?.id.toString()}
             ListEmptyComponent={<View style={styles.emptyState}>
               <FontAwesome6 name='bookmark' regular size={64} color={COLORS.textLight} />
               <Text style={styles.emptyTitle}>No Events yet</Text>

@@ -9,7 +9,10 @@
     "userInterfaceStyle": "automatic",
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.duclos.holywave"
+      "bundleIdentifier": "com.duclos.holywave",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +22,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "com.duclos.holywave"
+      "package": "com.duclos.holywave",
+      "usesCleartextTraffic": true
     },
     "web": {
       "output": "static",
@@ -39,11 +43,16 @@
           }
         }
       ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ],
       "expo-font",
-      "expo-image",
-      "expo-secure-store",
-      "expo-web-browser",
-      "expo-sharing"
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true,
