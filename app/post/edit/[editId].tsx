@@ -1,4 +1,4 @@
-import { View, Text, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity, Image } from 'react-native';
+import { View, Text, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { useUpdatePost } from '@/hooks/useUpdatePost';
 import { useAuth } from '@clerk/clerk-expo';
@@ -12,6 +12,7 @@ import Checkbox from 'expo-checkbox';
 import { RadioButton } from 'react-native-paper';
 import { useCategory } from '@/hooks/useCategory';
 import MultiSelect from 'react-native-multiple-select';
+import ImagePickerView from '@/components/ImagePickerView';
 
 const PostEditScreen = () => {
   const router = useRouter();
@@ -23,6 +24,7 @@ const PostEditScreen = () => {
     title, setTitle,
     categories, setCategories,
     imageUri,
+    imageResizeOption, setImageResizeOption,
     phone, setPhone,
     email, setEmail,
     location,
@@ -139,16 +141,13 @@ const PostEditScreen = () => {
             {/* Image */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Book image</Text>
-              <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-                {imageUri ? (
-                  <Image source={{ uri: imageUri }} style={styles.previewImage} />
-                ) : (
-                  <View style={styles.placeholderContainer}>
-                    <Feather name='image' size={40} color={COLORS.textSecondary} />
-                    <Text style={styles.placeholderText}>Tap to select an image</Text>
-                  </View>
-                )}
-              </TouchableOpacity>
+              <ImagePickerView
+                imageUri={imageUri}
+                onPickImage={pickImage}
+                onRemoveImage={removeImage}
+                resizeOption={imageResizeOption}
+                onResizeOptionChange={setImageResizeOption}
+              />
             </View>
             {/* Telephone */}
             <View style={styles.formGroup}>

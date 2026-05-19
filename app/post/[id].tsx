@@ -15,15 +15,18 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import ShareButton from '@/components/ShareButton';
 import { getOptimizedImage } from '@/utils/helper';
 import { ImageSize } from '../models/types';
+import ImageModalViewer from '@/components/ImageModalViewer';
 
 const PostDetailScreen = () => {
     const router = useRouter();
     const { currentUser } = useCurrentUser();
 
-    const { id: postId } = useLocalSearchParams();
+    const { id } = useLocalSearchParams();
+    const postId = Array.isArray(id) ? id[0] : id;
     const { userId } = useAuth();
     const [isSaving, setIsSaving] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
+    const [isImageModalVisible, setIsImageModalVisible] = useState(false);
 
     const { post, isLoadingPost, errorPost, refetchPost, toggleLike, toggleBookmark, checkIsLiked, checkIsBookmarked } = usePost({ postId });
 
@@ -42,6 +45,14 @@ const PostDetailScreen = () => {
         } finally {
             setIsSaving(false);
         }
+    }
+
+    const openImageModal = () => {
+        setIsImageModalVisible(true);
+    }
+
+    const closeImageModal = () => {
+        setIsImageModalVisible(false);
     }
 
     if (errorPost) {
@@ -63,15 +74,24 @@ const PostDetailScreen = () => {
 
                     {/** TODO  Check if post has image otherwise display default image */}
                     <View style={styles.headerContainer}>
-                        <Image
-                            source={{ uri: getOptimizedImage(post.image, ImageSize.Small) }}
-                            style={styles.headerImage}
-                            contentFit='cover'
-                        />
+                        <TouchableOpacity
+                            activeOpacity={0.95}
+                            onPress={openImageModal}
+                            style={styles.imageTapArea}
+                            accessibilityRole='imagebutton'
+                            accessibilityLabel='Open event image'
+                        >
+                            <Image
+                                source={{ uri: getOptimizedImage(post.image, ImageSize.Small) }}
+                                style={styles.headerImage}
+                                contentFit='cover'
+                            />
+                        </TouchableOpacity>
                     </View>
                     <LinearGradient
                         colors={["transparent", "rgba(0,0,0,0.5)", "rgba(0,0,0,0.9)"]}
                         style={styles.gradientOverlay}
+                        pointerEvents='none'
                     />
                     <View style={styles.floatingButtons}>
                         <TouchableOpacity
@@ -107,7 +127,7 @@ const PostDetailScreen = () => {
                             </View>
                             <View style={styles.titleSubSectionContentRight}>
                                 <View>
-                                    <TouchableOpacity onPress={() => toggleBookmark(postId)}>
+                                    <TouchableOpacity onPress={() => postId && toggleBookmark(postId)}>
                                         <LinearGradient
                                             colors={["#2A7B9B", "#57C785"]}
                                             style={styles.statIconContainer}
@@ -121,7 +141,7 @@ const PostDetailScreen = () => {
                                     </TouchableOpacity>
                                 </View>
                                 <View>
-                                    <TouchableOpacity style={{ marginLeft: 8 }} onPress={() => toggleLike(postId)}>
+                                    <TouchableOpacity style={{ marginLeft: 8 }} onPress={() => postId && toggleLike(postId)}>
                                         <LinearGradient
                                             colors={["#2A7B9B", "#57C785"]}
                                             style={styles.statIconContainer}
@@ -192,7 +212,7 @@ const PostDetailScreen = () => {
                                     <FontAwesome6 name='calendar' size={20} color={COLORS.white} />
                                 </LinearGradient>
                                 <View style={styles.instructionContent}>
-                                    {sortAscAndFormatDates(post.eventDates).map((item, index) => (
+                                    {sortAscAndFormatDates(post.eventDates).filter((item) => item !== undefined).map((item, index) => (
                                         <Text key={index} style={styles.instructionTextAddress}>{item.date} - {item.time} </Text>))
                                     }
                                 </View>
@@ -261,6 +281,11 @@ const PostDetailScreen = () => {
                     </View>
                 </View>
             </ScrollView>
+            <ImageModalViewer
+                visible={isImageModalVisible}
+                uri={post.image}
+                onClose={closeImageModal}
+            />
         </View>
     )
 }

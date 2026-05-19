@@ -213,6 +213,9 @@ const styles = StyleSheet.create({
     starButton: {
         padding: 8,
     },
+    imagePickerBlock: {
+        gap: 10,
+    },
     imagePicker: {
         width: "100%",
         height: 200,
@@ -225,6 +228,52 @@ const styles = StyleSheet.create({
     previewImage: {
         width: "100%",
         height: "100%",
+        backgroundColor: COLORS.inputBackground,
+    },
+    previewImageContainer: {
+        width: "100%",
+        height: "100%",
+        backgroundColor: COLORS.inputBackground,
+    },
+    removeImageButton: {
+        position: "absolute",
+        top: 10,
+        right: 10,
+        width: 34,
+        height: 34,
+        borderRadius: 17,
+        backgroundColor: "rgba(0, 0, 0, 0.55)",
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    imageResizeControls: {
+        flexDirection: "row",
+        backgroundColor: COLORS.inputBackground,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+        padding: 4,
+        gap: 4,
+    },
+    imageResizeOption: {
+        flex: 1,
+        minHeight: 34,
+        borderRadius: 8,
+        justifyContent: "center",
+        alignItems: "center",
+        paddingHorizontal: 4,
+    },
+    imageResizeOptionSelected: {
+        backgroundColor: COLORS.primary,
+    },
+    imageResizeOptionText: {
+        color: COLORS.textSecondary,
+        fontSize: 12,
+        fontWeight: "600",
+        textAlign: "center",
+    },
+    imageResizeOptionTextSelected: {
+        color: COLORS.white,
     },
     placeholderContainer: {
         width: "100%",
