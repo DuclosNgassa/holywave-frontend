@@ -2,11 +2,13 @@ import { Address, Frequency, Location, UploadImageResponse } from "@/app/models/
 import { useState } from "react";
 import { Alert, Platform } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
+import type { ImagePickerAsset } from 'expo-image-picker';
 import { useMutation } from "@tanstack/react-query";
 import { Post } from "@/app/models/post";
 import { postApi, useApiClient } from "@/utils/api";
 import { useRouter } from "expo-router";
 import { usePost } from "./usePost";
+import { compressImageForUpload, DEFAULT_IMAGE_RESIZE_OPTION, ImageResizeOption } from "@/utils/imageUpload";
 
 
 export const useUpdatePost = (postId: string) => {
@@ -19,6 +21,8 @@ export const useUpdatePost = (postId: string) => {
     const [categories, setCategories] = useState(post.categories.map((item) => item.id));
     console.log("Categories: ", categories);
     const [imageUri, setImageUri] = useState<string>(post.image);
+    const [imageAsset, setImageAsset] = useState<ImagePickerAsset | null>(null);
+    const [imageResizeOption, setImageResizeOption] = useState<ImageResizeOption>(DEFAULT_IMAGE_RESIZE_OPTION);
     const [phone, setPhone] = useState(post.phone);
     const [email, setEmail] = useState(post.email);
     const [location, setLocation] = useState<Location>({
@@ -75,14 +79,15 @@ export const useUpdatePost = (postId: string) => {
             // launch image library
             const result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: 'images',
-                allowsEditing: true,
-                aspect: [5, 6],
-                quality: 0.5, // lower quality for smaller base64
-                base64: true,
+                allowsEditing: false,
+                quality: 1,
+                base64: false,
             })
 
             if (!result.canceled) {
-                setImageUri(result.assets[0].uri);
+                const selectedAsset = result.assets[0];
+                setImageUri(selectedAsset.uri);
+                setImageAsset(selectedAsset);
             }
         } catch (error) {
             console.log("Error picking image", error);
@@ -114,6 +119,8 @@ export const useUpdatePost = (postId: string) => {
     const resetForm = () => {
         setTitle("");
         setImageUri("");
+        setImageAsset(null);
+        setImageResizeOption(DEFAULT_IMAGE_RESIZE_OPTION);
         setPhone("");
         setEmail("");
         setLocation({
@@ -228,7 +235,8 @@ export const useUpdatePost = (postId: string) => {
         console.log("Postdata: ", postData);
         
         if (imageUri) {
-            const uploadResult = await uploadImageMutation.mutateAsync(imageUri);
+            const imageUriForUpload = imageAsset ? await compressImageForUpload(imageAsset, imageResizeOption) : imageUri;
+            const uploadResult = await uploadImageMutation.mutateAsync(imageUriForUpload);
             postData.image = uploadResult.url;
         }
 
@@ -240,6 +248,7 @@ export const useUpdatePost = (postId: string) => {
         title, setTitle,
         categories, setCategories,
         imageUri, setImageUri,
+        imageResizeOption, setImageResizeOption,
         phone, setPhone,
         email, setEmail,
         location, setLocation,
@@ -252,7 +261,11 @@ export const useUpdatePost = (postId: string) => {
         paidEvent, setPaidEvent,
         loading, setLoading,
         isCreating: updatePostMutation.isPending,
-        removeImage: () => setImageUri(""),
+        removeImage: () => {
+            setImageUri("");
+            setImageAsset(null);
+            setImageResizeOption(DEFAULT_IMAGE_RESIZE_OPTION);
+        },
         pickImage,
         handleLocationChange,
         handleFrequencyChange,

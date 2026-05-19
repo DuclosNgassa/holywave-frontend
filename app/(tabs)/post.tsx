@@ -1,10 +1,10 @@
-import { View, Text, TextInput, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
-import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Pressable } from 'react-native';
+import React, { useRef, useState } from 'react';
 import styles from '@/assets/styles/post.styles';
 import { Feather } from '@expo/vector-icons';
 import Checkbox from "expo-checkbox";
 import { RadioButton } from 'react-native-paper';
-import EventDateList from '@/components/EventDateList';
+import EventDateList, { EventDateListRef } from '@/components/EventDateList';
 import AddressComponent from '@/components/Address';
 import { useCreatePost } from '@/hooks/useCreatePost';
 import { useCategory } from '@/hooks/useCategory';
@@ -12,14 +12,19 @@ import { COLORS } from '@/constants/colors';
 import MultiSelect from 'react-native-multiple-select';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { Location } from '../models/types';
+import ImagePickerView from '@/components/ImagePickerView';
 
 
 const PostScreen = () => {
+  const categorySelectRef = useRef<any>(null);
+  const eventDateListRef = useRef<EventDateListRef>(null);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
 
   const {
     title, setTitle,
     categories, setCategories,
     imageUri,
+    imageResizeOption, setImageResizeOption,
     address,
     phone, setPhone,
     email, setEmail,
@@ -55,13 +60,25 @@ const PostScreen = () => {
     console.log("SelectedItems: ", selected);
   };
 
+  const closeCategoryDropdown = () => {
+    if (isCategoryDropdownOpen) {
+      categorySelectRef.current?._clearSelectorCallback?.();
+      setIsCategoryDropdownOpen(false);
+    }
+  };
+
+  const closeOpenSelectionViews = () => {
+    closeCategoryDropdown();
+    eventDateListRef.current?.closePickers();
+  };
+
   return (
 
     <KeyboardAwareScrollView
       style={styles.scrollViewStyle}
       contentContainerStyle={styles.container}
     >
-      <View style={styles.card}>
+      <Pressable style={styles.card} onPress={closeOpenSelectionViews}>
         {/**Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Add Event recommendation</Text>
@@ -88,11 +105,16 @@ const PostScreen = () => {
             </View>
           </View>
           {/** Categories */}
-          <View>
+          <View
+            onTouchStart={(event) => event.stopPropagation()}
+          >
             <MultiSelect
+              ref={categorySelectRef}
               items={categoriesData}
               uniqueKey="id"
               onSelectedItemsChange={onSelectedCategoriesChange}
+              onToggleList={() => setIsCategoryDropdownOpen((isOpen) => !isOpen)}
+              onClearSelector={() => setIsCategoryDropdownOpen(false)}
               selectedItems={categories}
               selectText="Pick category"
               searchInputPlaceholderText="Search Items..."
@@ -125,16 +147,13 @@ const PostScreen = () => {
           {/* Image */}
           <View style={styles.formGroup}>
             <Text style={styles.label}>Book image</Text>
-            <TouchableOpacity style={styles.imagePicker} onPress={pickImage}>
-              {imageUri ? (
-                <Image source={{ uri: imageUri }} style={styles.previewImage} />
-              ) : (
-                <View style={styles.placeholderContainer}>
-                  <Feather name='image' size={40} color={COLORS.textSecondary} />
-                  <Text style={styles.placeholderText}>Tap to select an image</Text>
-                </View>
-              )}
-            </TouchableOpacity>
+            <ImagePickerView
+              imageUri={imageUri}
+              onPickImage={pickImage}
+              onRemoveImage={removeImage}
+              resizeOption={imageResizeOption}
+              onResizeOptionChange={setImageResizeOption}
+            />
           </View>
           {/* Telephone */}
           <View style={styles.formGroup}>
@@ -219,7 +238,7 @@ const PostScreen = () => {
             </View>
           </View>
           {/** Date and time */}
-          <EventDateList eventDates={eventDates} onChange={handleEventDatesChange} />
+          <EventDateList ref={eventDateListRef} eventDates={eventDates} onChange={handleEventDatesChange} />
           {/** Frequency */}
           <View style={styles.formGroup}>
             <Text style={styles.label}>Frequency</Text>
@@ -310,7 +329,7 @@ const PostScreen = () => {
             )}
           </TouchableOpacity>
         </View>
-      </View>
+      </Pressable>
     </KeyboardAwareScrollView>
   )
 }

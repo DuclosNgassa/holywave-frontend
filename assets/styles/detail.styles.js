@@ -15,6 +15,10 @@ const recipeDetailStyles = StyleSheet.create({
   imageContainer: {
     ...StyleSheet.absoluteFillObject,
   },
+  imageTapArea: {
+    width: "100%",
+    height: "100%",
+  },
   headerImage: {
     width: "100%",
     height: "120%",
