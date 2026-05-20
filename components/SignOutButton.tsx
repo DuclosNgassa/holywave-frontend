@@ -1,7 +1,6 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { TouchableOpacity } from 'react-native'
 import React from 'react'
 import { Feather } from '@expo/vector-icons'
-import styles from "../assets/styles/profile.styles";
 import { useSignOut } from '@/hooks/useSignOut';
 import { COLORS } from '@/constants/colors';
 

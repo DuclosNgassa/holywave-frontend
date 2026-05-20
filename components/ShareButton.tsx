@@ -1,4 +1,4 @@
-import { Alert, StyleProp, TouchableOpacity, View, ViewStyle, Share } from 'react-native'
+import { Alert, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native'
 import React from 'react'
 import { Feather } from '@expo/vector-icons'
 import { COLORS } from '@/constants/colors';

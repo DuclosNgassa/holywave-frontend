@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, type TextStyle } from "react-native";
 import { COLORS } from "@/constants/colors";
 import { TYPOGRAPHY } from "@/constants/typography";
 
@@ -26,19 +26,19 @@ const styles = StyleSheet.create({
         marginBottom: 32,
     },
     title: {
-        ...TYPOGRAPHY.h1,
+        ...(TYPOGRAPHY.h1 as TextStyle),
         color: COLORS.primary,
         marginBottom: 8,
     },
     subtitle: {
-        ...TYPOGRAPHY.body,
+        ...(TYPOGRAPHY.body as TextStyle),
         color: COLORS.textLight,
         textAlign: "center",
     },
     formContainer: { marginBottom: 16 },
     inputGroup: { marginBottom: 20 },
     label: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         marginBottom: 8,
         color: COLORS.text,
     },
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         height: 48,
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.text,
     },
     eyeIcon: { padding: 8 },
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: COLORS.white,
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 16,
     },
     footer: {
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
         marginTop: 24,
     },
     footerText: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.textLight,
         marginRight: 5,
     },

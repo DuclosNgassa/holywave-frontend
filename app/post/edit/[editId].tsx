@@ -7,11 +7,12 @@ import AddressComponent from '@/components/Address';
 import EventDateList, { EventDateListRef } from '@/components/EventDateList';
 import { COLORS } from '@/constants/colors';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import Checkbox from 'expo-checkbox';
+import ExpoCheckbox from 'expo-checkbox';
 import { RadioButton } from 'react-native-paper';
 import { useCategory } from '@/hooks/useCategory';
 import MultiSelect from 'react-native-multiple-select';
 import ImagePickerView from '@/components/ImagePickerView';
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 const PostEditScreen = () => {
   const router = useRouter();
@@ -19,7 +20,8 @@ const PostEditScreen = () => {
   const eventDateListRef = useRef<EventDateListRef>(null);
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
 
-  const { editId: postId } = useLocalSearchParams();
+  const { editId } = useLocalSearchParams();
+  const postId = Array.isArray(editId) ? editId[0] : editId;
   const {
     title, setTitle,
     categories, setCategories,
@@ -30,12 +32,14 @@ const PostEditScreen = () => {
     location,
     link, setLink,
     frequency,
-    eventDates, setEventDates,
+    eventDates,
     description, setDescription,
     fee, setFee,
     paidEvent,
     address,
     loading,
+    isLoadingPost,
+    errorPost,
     removeImage,
     pickImage,
     handleLocationChange,
@@ -44,11 +48,11 @@ const PostEditScreen = () => {
     handleEventDatesChange,
     handleAddressChange,
     updatePost,
-  } = useUpdatePost(postId as string);
+  } = useUpdatePost(postId ?? "");
 
   const { categoriesData } = useCategory();
 
-  const onSelectedCategoriesChange = (selected) => {
+  const onSelectedCategoriesChange = (selected: string[]) => {
     setCategories(selected);
   };
 
@@ -59,6 +63,14 @@ const PostEditScreen = () => {
     }
     eventDateListRef.current?.closePickers();
   };
+
+  if (!postId || isLoadingPost) {
+    return <LoadingSpinner message="Loading event..." />;
+  }
+
+  if (errorPost) {
+    return <LoadingSpinner message="Unable to load this event." />;
+  }
 
   return (
     <KeyboardAvoidingView
@@ -123,7 +135,6 @@ const PostEditScreen = () => {
                 uniqueKey="id"
                 onSelectedItemsChange={onSelectedCategoriesChange}
                 onToggleList={() => setIsCategoryDropdownOpen((isOpen) => !isOpen)}
-                onClearSelector={() => setIsCategoryDropdownOpen(false)}
                 selectedItems={categories}
                 selectText="Select categories"
                 searchInputPlaceholderText="Search..."
@@ -206,7 +217,7 @@ const PostEditScreen = () => {
                   style={styles.checkBoxItem} 
                   onPress={() => handleLocationChange("onsite")}
                 >
-                  <Checkbox
+                  <ExpoCheckbox
                     value={location.onsite}
                     onValueChange={() => handleLocationChange("onsite")}
                     color={location.onsite ? COLORS.primary : COLORS.textLight}
@@ -217,7 +228,7 @@ const PostEditScreen = () => {
                   style={styles.checkBoxItem} 
                   onPress={() => handleLocationChange("online")}
                 >
-                  <Checkbox
+                  <ExpoCheckbox
                     value={location.online}
                     onValueChange={() => handleLocationChange("online")}
                     color={location.online ? COLORS.primary : COLORS.textLight}
@@ -291,11 +302,11 @@ const PostEditScreen = () => {
                   <TouchableOpacity 
                     key={freq} 
                     style={styles.checkBoxItem} 
-                    onPress={() => handleFrequencyChange(freq as any)}
+                    onPress={() => handleFrequencyChange(freq as keyof typeof frequency)}
                   >
-                    <Checkbox
+                    <ExpoCheckbox
                       value={frequency[freq as keyof typeof frequency]}
-                      onValueChange={() => handleFrequencyChange(freq as any)}
+                      onValueChange={() => handleFrequencyChange(freq as keyof typeof frequency)}
                       color={frequency[freq as keyof typeof frequency] ? COLORS.primary : COLORS.textLight}
                     />
                     <Text style={styles.checkboxLabel}>{freq.charAt(0).toUpperCase() + freq.slice(1)}</Text>

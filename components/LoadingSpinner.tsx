@@ -1,7 +1,13 @@
-import { View, ActivityIndicator, Text, StyleSheet } from "react-native";
-import { COLORS } from "../constants/colors";
+import { View, ActivityIndicator, Text, StyleSheet, type ActivityIndicatorProps } from "react-native";
+import { COLORS } from "@/constants/colors";
 
-const LoadingSpinner = ({ message = "Loading...", size = "large" }) => {
+const LoadingSpinner = ({
+  message = "Loading...",
+  size = "large",
+}: {
+  message?: string;
+  size?: ActivityIndicatorProps["size"];
+}) => {
   return (
     <View style={styles.container}>
       <View style={styles.content}>

@@ -17,7 +17,7 @@ const EventDateList = forwardRef<EventDateListRef, EventDateListProps>(({ eventD
   const selectedEventDates = eventDates ?? [];
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
-  const [eventDate, setEventDate] = useState<Date>(new Date());;
+  const [eventDate, setEventDate] = useState<Date>(new Date());
 
 
   const formatHour = (date: Date) => {
@@ -146,8 +146,8 @@ const EventDateList = forwardRef<EventDateListRef, EventDateListProps>(({ eventD
           />}
       </View>
       <View style={{ marginVertical: 8 }}>
-        {selectedEventDates.map((eventDate) => (
-          <View style={[styles.dateTimeContainer, { marginBottom: 6 }]} key={eventDate.toString()}>
+        {selectedEventDates.map((eventDate, index) => (
+          <View style={[styles.dateTimeContainer, { marginBottom: 6 }]} key={eventDate.toString() + index}>
             <View
               style={styles.dateTimeInputContainer2}
             >

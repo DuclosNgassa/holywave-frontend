@@ -13,7 +13,7 @@ export default function AuthRoutesLayout() {
     if (isSignedIn) {
       router.replace("/(tabs)/home");
     }
-  }, [isLoaded, isSignedIn]);
+  }, [isLoaded, isSignedIn, router]);
 
   return <Stack />
 }

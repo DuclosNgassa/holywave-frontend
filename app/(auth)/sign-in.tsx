@@ -1,6 +1,6 @@
 import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React from 'react'
-import styles from "../../assets/styles/login.styles.js"
+import styles from "../../assets/styles/login.styles"
 import { useSocialAuth } from '@/hooks/useSocialAuth';
 import { COLORS } from '@/constants/colors.js';
 

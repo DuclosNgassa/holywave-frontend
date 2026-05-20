@@ -1,5 +1,5 @@
 import { postApi, useApiClient } from "@/utils/api"
-import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Alert } from "react-native";
 
 export const usePost = ({
@@ -37,7 +37,7 @@ export const usePost = ({
       postApi.getPosts(api, pageParam, searchParam, categoryParam),
     getNextPageParam: (lastPage) => lastPage?.data?.nextPage ?? undefined,
     staleTime: 1000 * 30, // ⏱ prevents aggressive refetching
-    keepPreviousData: true, // 👈 smooth UX when filters change
+    placeholderData: keepPreviousData, // smooth UX when filters change
   });
 
   /**
@@ -50,7 +50,7 @@ export const usePost = ({
     refetch: refetchPostsUser,
   } = useQuery({
     queryKey: ["userPosts", userId],
-    queryFn: () => postApi.getPostByUserId(api, userId),
+    queryFn: () => postApi.getPostByUserId(api, userId!),
     enabled: !!userId,
     select: (res) => res.data,
   });
@@ -65,7 +65,7 @@ export const usePost = ({
     refetch: refetchPost,
   } = useQuery({
     queryKey: ["post", postId],
-    queryFn: () => postApi.getPostById(api, postId),
+    queryFn: () => postApi.getPostById(api, postId!),
     enabled: !!postId,
     select: (res) => res.data,
   });
@@ -80,7 +80,7 @@ export const usePost = ({
     refetch: refetchPostsLiked,
   } = useQuery({
     queryKey: ["userLikedPosts", userId],
-    queryFn: () => postApi.getUserLikedPosts(api, userId),
+    queryFn: () => postApi.getUserLikedPosts(api, userId!),
     enabled: !!userId,
     select: (res) => res.data,
   });
@@ -95,7 +95,7 @@ export const usePost = ({
     refetch: refetchPostsBookmarked,
   } = useQuery({
     queryKey: ["userBookmarkedPosts", userId],
-    queryFn: () => postApi.getUserBookmarkedPosts(api, userId),
+    queryFn: () => postApi.getUserBookmarkedPosts(api, userId!),
     enabled: !!userId,
     select: (res) => res.data,
   });
@@ -167,7 +167,7 @@ export const usePost = ({
    * 🚀 RETURN
    */
   return {
-    posts: data?.pages.flatMap((p) => p.data.posts) || [],
+    posts: data?.pages.flatMap((p: any) => p.data.posts) || [],
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,

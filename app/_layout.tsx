@@ -1,5 +1,5 @@
-import { ClerkProvider, useAuth } from '@clerk/clerk-expo'
-import { Stack, useRouter } from "expo-router";
+import { ClerkProvider } from '@clerk/clerk-expo'
+import { Stack } from "expo-router";
 import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import * as SplashScreen from 'expo-splash-screen';

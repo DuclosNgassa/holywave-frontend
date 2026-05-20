@@ -1,10 +1,10 @@
 import { Address, Frequency, Location, UploadImageResponse } from "@/app/models/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, Platform } from "react-native";
 import * as ImagePicker from 'expo-image-picker';
 import type { ImagePickerAsset } from 'expo-image-picker';
 import { useMutation } from "@tanstack/react-query";
-import { Post } from "@/app/models/post";
+import { Post, PostCategory } from "@/app/models/post";
 import { postApi, useApiClient } from "@/utils/api";
 import { useRouter } from "expo-router";
 import { usePost } from "./usePost";
@@ -14,42 +14,81 @@ import { compressImageForUpload, DEFAULT_IMAGE_RESIZE_OPTION, ImageResizeOption 
 export const useUpdatePost = (postId: string) => {
     const router = useRouter();
     const api = useApiClient();
-    const { post, isLoadingPost, errorPost, refetchPost, checkIsLiked } = usePost({postId});
+    const { post, isLoadingPost, errorPost } = usePost({postId});
 
     /** UseState */
-    const [title, setTitle] = useState(post.title);
-    const [categories, setCategories] = useState(post.categories.map((item) => item.id));
-    console.log("Categories: ", categories);
-    const [imageUri, setImageUri] = useState<string>(post.image);
+    const [title, setTitle] = useState("");
+    const [categories, setCategories] = useState<string[]>([]);
+    const [imageUri, setImageUri] = useState<string>("");
     const [imageAsset, setImageAsset] = useState<ImagePickerAsset | null>(null);
     const [imageResizeOption, setImageResizeOption] = useState<ImageResizeOption>(DEFAULT_IMAGE_RESIZE_OPTION);
-    const [phone, setPhone] = useState(post.phone);
-    const [email, setEmail] = useState(post.email);
+    const [phone, setPhone] = useState("");
+    const [email, setEmail] = useState("");
     const [location, setLocation] = useState<Location>({
-        online: post.location.online,
-        onsite: post.location.onsite,
+        online: false,
+        onsite: true,
     });
     const [address, setAddress] = useState<Address>({
-        street: post.address.street,
-        houseNumber: post.address.houseNNumber,
-        zipCode: post.address.zipCode,
-        city: post.address.city,
-        state: post.address.state,
-        country: post.address.country,
+        street: "",
+        houseNumber: "",
+        zipCode: "",
+        city: "",
+        state: "",
+        country: "",
     });
-    const [link, setLink] = useState(post.link);
-    const [eventDates, setEventDates] = useState<Date[]>(post.eventDates.map((eventDate:Date) => new Date(eventDate)));
+    const [link, setLink] = useState("");
+    const [eventDates, setEventDates] = useState<Date[]>([]);
     const [frequency, setFrequency] = useState<Frequency>({
-        daily: post.frequency.daily,
-        weekly: post.frequency.weekly,
-        monthly: post.frequency.monthly,
-        yearly: post.frequency.yearly,
+        daily: false,
+        weekly: false,
+        monthly: false,
+        yearly: false,
     });
-    const [description, setDescription] = useState(post.description);
-    const [fee, setFee] = useState(post.fee?.toString());
-    const [paidEvent, setPaidEvent] = useState(post.fee ? "paid" : "free");
+    const [description, setDescription] = useState("");
+    const [fee, setFee] = useState<string | undefined>(undefined);
+    const [paidEvent, setPaidEvent] = useState("free");
 
     const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!post) return;
+
+        setTitle(post.title ?? "");
+        setCategories(
+            (post.categories ?? []).map((category: PostCategory) =>
+                typeof category === "string" ? category : category.id
+            )
+        );
+        setImageUri(post.image ?? "");
+        setImageAsset(null);
+        setImageResizeOption(DEFAULT_IMAGE_RESIZE_OPTION);
+        setPhone(post.phone ?? "");
+        setEmail(post.email ?? "");
+        setLocation({
+            online: post.location?.online ?? false,
+            onsite: post.location?.onsite ?? true,
+        });
+        setAddress({
+            street: post.address?.street ?? "",
+            houseNumber: post.address?.houseNumber ?? "",
+            zipCode: post.address?.zipCode ?? "",
+            city: post.address?.city ?? "",
+            state: post.address?.state ?? "",
+            country: post.address?.country ?? "",
+        });
+        setLink(post.link ?? "");
+        setEventDates((post.eventDates ?? []).map((eventDate: string) => new Date(eventDate)));
+        setFrequency({
+            daily: post.frequency?.daily ?? false,
+            weekly: post.frequency?.weekly ?? false,
+            monthly: post.frequency?.monthly ?? false,
+            yearly: post.frequency?.yearly ?? false,
+        });
+        setDescription(post.description ?? "");
+        setFee(post.fee?.toString());
+        setPaidEvent(post.fee ? "paid" : "free");
+    }, [post]);
+
     /** Methods */
     const handleLocationChange = (key: keyof Location) => {
         setLocation((prev) => ({ ...prev, [key]: !prev[key] }));
@@ -169,7 +208,7 @@ export const useUpdatePost = (postId: string) => {
             uri: imageUri,
             name: `image.${fileType}`,
             type: mimeType
-        });
+        } as any);
 
         const response = await postApi.uploadImage(api, formData);
         return response.data;
@@ -194,7 +233,7 @@ export const useUpdatePost = (postId: string) => {
 
     const updatePostMutation = useMutation({
         mutationFn: savePost,
-        onSuccess: (postUpdated) => {
+        onSuccess: () => {
             resetForm();
             Alert.alert("Success", "Post updated successfully");
             router.back();
@@ -260,6 +299,8 @@ export const useUpdatePost = (postId: string) => {
         fee, setFee,
         paidEvent, setPaidEvent,
         loading, setLoading,
+        isLoadingPost,
+        errorPost,
         isCreating: updatePostMutation.isPending,
         removeImage: () => {
             setImageUri("");

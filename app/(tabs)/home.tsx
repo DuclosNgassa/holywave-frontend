@@ -1,8 +1,8 @@
-import { View, Text, TouchableOpacity, TextInput, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, RefreshControl, ActivityIndicator } from 'react-native';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useUserSync } from '@/hooks/useUserSync';
 import { Feather } from '@expo/vector-icons';
-import styles from '@/assets/styles/home.styles.js';
+import styles from '@/assets/styles/home.styles';
 import { COLORS } from '@/constants/colors.js';
 import CategoryFilter from '@/components/CategoryFilter';
 import { usePost } from '@/hooks/usePost';
@@ -11,7 +11,6 @@ import PostCard from '@/components/PostCard';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import NearByEvent from '@/components/NearbyEvent';
 import { router, useFocusEffect } from 'expo-router';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNearbyPost } from '@/hooks/useNearbyPost';
 import { FlashList } from "@shopify/flash-list";
 import { ImageSize } from '../models/types';
@@ -43,14 +42,13 @@ const HomeScreen = () => {
   const [categoryParam, setCategoryParam] = useState<string>("");
 
   const { categoriesData, isLoadingCategories, errorCategories } = useCategory();
-  const { currentUser } = useCurrentUser();
   const postParams = useMemo(() => ({
     searchParam: debouncedSearch,
     categoryParam,
   }), [debouncedSearch, categoryParam]);
 
-  const { posts, fetchNextPage, hasNextPage, isFetchingNextPage, isFetching, isRefetching, isLoadingPosts, errorPosts, refetchPosts, toggleLike, checkIsLiked } = usePost({ categoryParam:postParams.categoryParam, searchParam: postParams.searchParam });
-  const { nearbyPosts, isLoading, error: errorNearbyPost, refetch: refetchNearbyPosts } = useNearbyPost();
+  const { posts, fetchNextPage, hasNextPage, isFetchingNextPage, isLoadingPosts, errorPosts, refetchPosts, toggleLike } = usePost({ categoryParam:postParams.categoryParam, searchParam: postParams.searchParam });
+  const { nearbyPosts, refetch: refetchNearbyPosts } = useNearbyPost();
 
   if (isLoadingCategories) {
   }
@@ -66,7 +64,6 @@ const HomeScreen = () => {
 
   useFocusEffect(
     useCallback(() => {
-      let isActive = true;
       const fetchData = async () => {
         await Promise.all([
           refetchPosts(), // Refetch data when the screen is focused
@@ -75,10 +72,6 @@ const HomeScreen = () => {
       };
 
       fetchData();
-
-      return () => {
-        isActive = false;
-      };
     }, [refetchPosts, refetchNearbyPosts])
   );
 
@@ -86,8 +79,6 @@ const HomeScreen = () => {
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(searchParam);
-      console.log(debouncedSearch)
-      console.log("postParams: ", postParams);
     }, 400);
   
     return () => clearTimeout(timeout);

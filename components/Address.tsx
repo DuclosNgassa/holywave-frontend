@@ -4,30 +4,39 @@ import { COLORS } from "@/constants/colors";
 import React, { useState } from "react";
 import { View, TextInput } from "react-native";
 import CountryPicker from 'react-native-country-picker-modal'
+import type { Country, CountryCode } from 'react-native-country-picker-modal';
+
+const emptyAddress: Address = {
+    country: "",
+    city: "",
+    street: "",
+    houseNumber: "",
+    zipCode: "",
+    state: "",
+};
 
 
 const AddressComponent: React.FC<AddressProps> = ({ address, onChange }) => {
+    const currentAddress = address ?? emptyAddress;
 
-    const [countryCode, setCountryCode] = useState('DE')
+    const [countryCode, setCountryCode] = useState<CountryCode>('DE')
     const changeAddress = (key: keyof Address, value: string) => {
 
-        const updatedAddress = ({ ...address, [key]: value });
+        const updatedAddress = ({ ...currentAddress, [key]: value });
         onChange?.(updatedAddress);
     };
 
-    const onSelect = (country) => {
+    const onSelect = (country: Country) => {
         setCountryCode(country.cca2)
-        changeAddress('country', country.name);
+        changeAddress('country', String(country.name));
     }
 
-    const [withCountryNameButton, setWithCountryNameButton] = useState<boolean>(
-        false,
-    )
-    const [withFlag, setWithFlag] = useState<boolean>(true)
-    const [withEmoji, setWithEmoji] = useState<boolean>(true)
-    const [withFilter, setWithFilter] = useState<boolean>(true)
-    const [withAlphaFilter, setWithAlphaFilter] = useState<boolean>(false)
-    const [withCallingCode, setWithCallingCode] = useState<boolean>(false)
+    const withCountryNameButton = false;
+    const withFlag = true;
+    const withEmoji = true;
+    const withFilter = true;
+    const withAlphaFilter = false;
+    const withCallingCode = false;
 
     return (
         <>
@@ -38,7 +47,7 @@ const AddressComponent: React.FC<AddressProps> = ({ address, onChange }) => {
                             style={styles.input}
                             placeholder='Street'
                             placeholderTextColor={COLORS.placeholderText}
-                            value={address.street}
+                            value={currentAddress.street}
                             onChangeText={(value) => changeAddress("street", value)}
                         />
                     </View>
@@ -49,7 +58,7 @@ const AddressComponent: React.FC<AddressProps> = ({ address, onChange }) => {
                             style={styles.input}
                             placeholder='Nr.'
                             placeholderTextColor={COLORS.placeholderText}
-                            value={address.houseNumber}
+                            value={currentAddress.houseNumber}
                             onChangeText={(value) => changeAddress("houseNumber", value)}
                         />
                     </View>
@@ -62,7 +71,7 @@ const AddressComponent: React.FC<AddressProps> = ({ address, onChange }) => {
                             style={styles.input}
                             placeholder='ZipCode'
                             placeholderTextColor={COLORS.placeholderText}
-                            value={address.zipCode}
+                            value={currentAddress.zipCode}
                             onChangeText={(value) => changeAddress("zipCode", value)}
                         />
                     </View>
@@ -73,7 +82,7 @@ const AddressComponent: React.FC<AddressProps> = ({ address, onChange }) => {
                             style={styles.input}
                             placeholder='City'
                             placeholderTextColor={COLORS.placeholderText}
-                            value={address.city}
+                            value={currentAddress.city}
                             onChangeText={(value) => changeAddress("city", value)}
                         />
                     </View>
@@ -86,7 +95,7 @@ const AddressComponent: React.FC<AddressProps> = ({ address, onChange }) => {
                             style={styles.input}
                             placeholder='State'
                             placeholderTextColor={COLORS.placeholderText}
-                            value={address.state}
+                            value={currentAddress.state}
                             onChangeText={(value) => changeAddress("state", value)}
                         />
                     </View>
@@ -109,7 +118,7 @@ const AddressComponent: React.FC<AddressProps> = ({ address, onChange }) => {
                             style={styles.input}
                             placeholder='Germany'
                             placeholderTextColor={COLORS.placeholderText}
-                            value={address.country}
+                            value={currentAddress.country}
                         />
                     </View>
                 </View>

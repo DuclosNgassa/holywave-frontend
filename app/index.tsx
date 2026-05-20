@@ -15,7 +15,7 @@ export default function Index() {
     } else {
       router.replace("/(auth)/sign-in");
     }
-  }, [isLoaded, isSignedIn]);
+  }, [isLoaded, isSignedIn, router]);
 
   return null;
 }

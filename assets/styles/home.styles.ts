@@ -1,10 +1,8 @@
 import { COLORS } from "@/constants/colors.js";
 import { TYPOGRAPHY } from "@/constants/typography.js";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, type TextStyle } from "react-native";
 
 const { width } = Dimensions.get("window");
-const cardWidth = (width / 2) - 15;
-const cardWidthNearBy = (width - 48) / 4;
 
 const homeStyles = StyleSheet.create({
     container: {
@@ -24,7 +22,7 @@ const homeStyles = StyleSheet.create({
         justifyContent: "space-between",
     },
     welcomeText: {
-        ...TYPOGRAPHY.h1,
+        ...(TYPOGRAPHY.h1 as TextStyle),
         color: COLORS.text,
     },
     featuredSection: {
@@ -67,14 +65,14 @@ const homeStyles = StyleSheet.create({
         alignSelf: "flex-start",
     },
     featuredBadgeText: {
-        ...TYPOGRAPHY.caption,
+        ...(TYPOGRAPHY.caption as TextStyle),
         color: COLORS.white,
     },
     featuredContent: {
         justifyContent: "flex-end",
     },
     featuredTitle: {
-        ...TYPOGRAPHY.h2,
+        ...(TYPOGRAPHY.h2 as TextStyle),
         color: COLORS.white,
         marginBottom: 12,
         textShadowColor: "rgba(0,0,0,0.3)",
@@ -94,13 +92,13 @@ const homeStyles = StyleSheet.create({
         paddingHorizontal: 32,
     },
     emptyTitle: {
-        ...TYPOGRAPHY.h3,
+        ...(TYPOGRAPHY.h3 as TextStyle),
         color: COLORS.text,
         marginTop: 16,
         marginBottom: 8,
     },
     emptyDescription: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.textLight,
         textAlign: "center",
     },
@@ -130,7 +128,7 @@ const homeStyles = StyleSheet.create({
         elevation: 4,
     },
     categoryText: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 14,
         color: "#6C757D", // Neutral grey text
     },
@@ -167,7 +165,7 @@ const homeStyles = StyleSheet.create({
     input: {
         flex: 1,
         height: "100%",
-        ...TYPOGRAPHY.body,
+        ...(TYPOGRAPHY.body as TextStyle),
         color: COLORS.text,
         fontSize: 16,
     },
@@ -211,12 +209,12 @@ export const recipeCardStyles = StyleSheet.create({
         gap: 4,
     },
     categoryText: {
-        ...TYPOGRAPHY.caption,
+        ...(TYPOGRAPHY.caption as TextStyle),
         color: COLORS.textLight,
         fontSize: 11,
     },
     title: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 16,
         color: COLORS.text,
         lineHeight: 20,
@@ -234,7 +232,7 @@ export const recipeCardStyles = StyleSheet.create({
         backgroundColor: COLORS.background,
     },
     authorName: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         fontSize: 13,
         color: COLORS.textLight,
     },
@@ -243,7 +241,7 @@ export const recipeCardStyles = StyleSheet.create({
         fontSize: 14,
     },
     dateText: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         fontSize: 13,
         color: COLORS.textLight,
     },
@@ -259,7 +257,7 @@ export const recipeCardStyles = StyleSheet.create({
         gap: 4,
     },
     feeText: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 14,
         color: COLORS.primary,
     },
@@ -274,7 +272,7 @@ export const recipeCardStyles = StyleSheet.create({
         gap: 4,
     },
     actionText: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         fontSize: 12,
         color: COLORS.textLight,
     },
@@ -318,7 +316,7 @@ export const nearbyCardStyles = StyleSheet.create({
         borderRadius: 20,
     },
     categoryText: {
-        ...TYPOGRAPHY.caption,
+        ...(TYPOGRAPHY.caption as TextStyle),
         color: COLORS.white,
         fontSize: 11,
     },
@@ -331,7 +329,7 @@ export const nearbyCardStyles = StyleSheet.create({
         gap: 6,
     },
     authorName: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         color: COLORS.white,
         fontSize: 13,
     },
@@ -340,18 +338,18 @@ export const nearbyCardStyles = StyleSheet.create({
         fontSize: 14,
     },
     timeText: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: 'rgba(255,255,255,0.8)',
         fontSize: 12,
     },
     title: {
-        ...TYPOGRAPHY.h3,
+        ...(TYPOGRAPHY.h3 as TextStyle),
         color: COLORS.white,
         fontSize: 18,
         lineHeight: 22,
     },
     sectionTitle: {
-        ...TYPOGRAPHY.h3,
+        ...(TYPOGRAPHY.h3 as TextStyle),
         color: COLORS.text,
         marginBottom: 12,
         marginLeft: 10,

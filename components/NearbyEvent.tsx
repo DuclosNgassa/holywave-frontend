@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, ScrollView, Dimensions, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Dimensions, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Image } from "expo-image";
 import { nearbyCardStyles } from "@/assets/styles/home.styles";
 import { ImageSize } from "@/app/models/types";
@@ -6,15 +6,26 @@ import { getOptimizedImage } from "@/utils/helper";
 import { FlatList } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { COLORS } from "@/constants/colors";
 import React, { useState } from "react";
+import type { Post } from "@/app/models/post";
 
 const { width } = Dimensions.get("window");
 
-const NearByEvent = ({ events, onSelectEvent, onSelectCategory }) => {
+type NearByEventProps = {
+    events: Post[];
+    onSelectEvent: (eventId: string) => void;
+    onSelectCategory?: (categoryId: string, categoryName: string) => void;
+};
+
+const NearByEvent = ({ events, onSelectEvent }: NearByEventProps) => {
     const [activeIndex, setActiveIndex] = useState(0);
 
-    const onScroll = (event) => {
+    const getCategoryName = (event: Post) => {
+        const [category] = event.categories ?? [];
+        return typeof category === "string" ? category : category?.name ?? "Event";
+    };
+
+    const onScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
         const contentOffsetX = event.nativeEvent.contentOffset.x;
         const index = Math.round(contentOffsetX / (width * 0.85 + 16));
         if (index !== activeIndex) {
@@ -22,10 +33,10 @@ const NearByEvent = ({ events, onSelectEvent, onSelectCategory }) => {
         }
     };
 
-    const renderNearbyItem = ({ item }) => (
+    const renderNearbyItem = ({ item }: { item: Post }) => (
         <TouchableOpacity
             style={nearbyCardStyles.container}
-            onPress={() => onSelectEvent(item.id)}
+            onPress={() => item.id && onSelectEvent(item.id)}
             activeOpacity={0.9}
             key={item.id}
         >
@@ -48,7 +59,7 @@ const NearByEvent = ({ events, onSelectEvent, onSelectCategory }) => {
             <View style={nearbyCardStyles.cardContent}>
                 <View style={nearbyCardStyles.categoryBadge}>
                     <Text style={nearbyCardStyles.categoryText}>
-                        {item.categories && item.categories.length > 0 ? item.categories[0].name : "Event"}
+                        {getCategoryName(item)}
                     </Text>
                 </View>
 
@@ -77,7 +88,7 @@ const NearByEvent = ({ events, onSelectEvent, onSelectCategory }) => {
                 horizontal
                 data={events}
                 renderItem={renderNearbyItem}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.id?.toString() ?? item.title}
                 showsHorizontalScrollIndicator={false}
                 snapToInterval={width * 0.85 + 16}
                 decelerationRate="fast"
@@ -87,7 +98,7 @@ const NearByEvent = ({ events, onSelectEvent, onSelectCategory }) => {
             />
 
             <View style={nearbyCardStyles.paginationContainer}>
-                {events.slice(0, 5).map((_, index) => (
+                {events.slice(0, 5).map((_, index: number) => (
                     <View
                         key={index}
                         style={[

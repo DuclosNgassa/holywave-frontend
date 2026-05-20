@@ -31,12 +31,12 @@ const FavoritesScreen = () => {
     deletePost 
   } = usePost({ userId: currentUser?.id });
 
-  const [favoritSelected, setFavoritSelected] = useState(true);
+  const [favoriteSelected, setFavoriteSelected] = useState(true);
   const [bookMarkSelected, setBookMarkSelected] = useState(false);
   const [myEventsSelected, setMyEventsSelected] = useState(false);
 
   const onSelectTab = (selected: string) => {
-    setFavoritSelected(selected === "favorit");
+    setFavoriteSelected(selected === "favorite");
     setBookMarkSelected(selected === "bookmark");
     setMyEventsSelected(selected === "my_events");
   };
@@ -90,10 +90,10 @@ const FavoritesScreen = () => {
       <View style={styles.sectionHeader}>
         <View style={styles.header}>
           <TouchableOpacity 
-            style={[styles.tabButton, favoritSelected ? styles.tabActive : styles.tabInActive]} 
-            onPress={() => onSelectTab("favorit")}
+            style={[styles.tabButton, favoriteSelected ? styles.tabActive : styles.tabInActive]}
+            onPress={() => onSelectTab("favorite")}
           >
-            <Text style={[styles.buttonText, favoritSelected && styles.buttonTextActive]}>Favorites</Text>
+            <Text style={[styles.buttonText, favoriteSelected && styles.buttonTextActive]}>Favorites</Text>
           </TouchableOpacity>
           <TouchableOpacity 
             style={[styles.tabButton, bookMarkSelected ? styles.tabActive : styles.tabInActive]} 
@@ -111,7 +111,7 @@ const FavoritesScreen = () => {
       </View>
 
       {/* FAVORITES SECTION */}
-      {favoritSelected && (
+      {favoriteSelected && (
         <View style={{ flex: 1 }}>
           <FlatList
             data={postsLiked}

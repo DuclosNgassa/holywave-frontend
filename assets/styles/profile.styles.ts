@@ -1,6 +1,6 @@
 import { COLORS } from "@/constants/colors";
 import { TYPOGRAPHY } from "@/constants/typography";
-import { StyleSheet } from "react-native";
+import { StyleSheet, type TextStyle } from "react-native";
 
 const styles = StyleSheet.create({
     avatar: {
@@ -46,17 +46,17 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     username: {
-        ...TYPOGRAPHY.h3,
+        ...(TYPOGRAPHY.h3 as TextStyle),
         color: COLORS.text,
         marginBottom: 4,
     },
     email: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.textLight,
         marginBottom: 4,
     },
     memberSince: {
-        ...TYPOGRAPHY.caption,
+        ...(TYPOGRAPHY.caption as TextStyle),
         fontSize: 10,
         color: COLORS.textLight,
     },
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
     },
     logoutText: {
         color: COLORS.white,
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         marginLeft: 8,
     },
     booksHeader: {
@@ -88,12 +88,12 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     booksTitle: {
-        ...TYPOGRAPHY.h3,
+        ...(TYPOGRAPHY.h3 as TextStyle),
         fontSize: 18,
         color: COLORS.text,
     },
     booksCount: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.textLight,
     },
     booksList: {
@@ -124,7 +124,7 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     bookTitle: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 16,
         color: COLORS.text,
         marginBottom: 4,
@@ -134,13 +134,13 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     bookCaption: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.text,
         marginBottom: 4,
         flex: 1,
     },
     bookDate: {
-        ...TYPOGRAPHY.caption,
+        ...(TYPOGRAPHY.caption as TextStyle),
         fontSize: 11,
         color: COLORS.textLight,
     },
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     emptyText: {
-        ...TYPOGRAPHY.h3,
+        ...(TYPOGRAPHY.h3 as TextStyle),
         fontSize: 16,
         color: COLORS.text,
         marginTop: 16,
@@ -175,10 +175,8 @@ const styles = StyleSheet.create({
     },
     addButtonText: {
         color: COLORS.white,
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
     },
 });
-
-export default styles;
 
 export default styles;

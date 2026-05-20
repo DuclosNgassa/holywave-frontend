@@ -1,8 +1,6 @@
 import { COLORS } from "@/constants/colors.js";
 import { TYPOGRAPHY } from "@/constants/typography.js";
-import { StyleSheet, Dimensions } from "react-native";
-
-const { width, height } = Dimensions.get("window");
+import { StyleSheet, type TextStyle } from "react-native";
 
 const favoriteStyles = StyleSheet.create({
     container: {
@@ -41,7 +39,7 @@ const favoriteStyles = StyleSheet.create({
         backgroundColor: "transparent",
     },
     buttonText: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 14,
         color: "#6C757D",
     },
@@ -85,12 +83,12 @@ const favoriteStyles = StyleSheet.create({
         zIndex: 100,
     },
     title: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 15,
         color: COLORS.text,
     },
     text: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         fontSize: 12,
         color: COLORS.textDark,
     },
@@ -114,12 +112,12 @@ const favoriteStyles = StyleSheet.create({
         alignContent: 'space-between'
     },
     address: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 13,
         color: COLORS.textSecondary,
     },
     feeText: {
-        ...TYPOGRAPHY.h3,
+        ...(TYPOGRAPHY.h3 as TextStyle),
         fontSize: 16,
         color: COLORS.primary,
         marginLeft: 4,
@@ -199,7 +197,6 @@ const favoriteStyles = StyleSheet.create({
     },
     favoriteButton: {
         color: COLORS.red,
-        size: 22,
         margin: 12
     },
     shareButton: {
@@ -208,7 +205,6 @@ const favoriteStyles = StyleSheet.create({
     },
     favoritDeleteButton: {
         color: COLORS.red,
-        size: 22,
         marginLeft: 8
     },
     emptyState: {
@@ -217,13 +213,13 @@ const favoriteStyles = StyleSheet.create({
         paddingHorizontal: 32,
     },
     emptyTitle: {
-        ...TYPOGRAPHY.h3,
+        ...(TYPOGRAPHY.h3 as TextStyle),
         color: COLORS.text,
         marginTop: 16,
         marginBottom: 8,
     },
     emptyDescription: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.textLight,
         textAlign: "center",
     },

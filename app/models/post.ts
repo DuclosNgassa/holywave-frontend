@@ -1,15 +1,14 @@
 import { Address, Frequency, Location } from "./types"
 
-type imageType = {
-    uri: string,
-    name: string,
-    type: string,
+export type PostCategory = string | {
+    id: string;
+    name: string;
 };
 
 export type Post = {
-    id: string,
+    id?: string,
     title: string,
-    categories: string[],
+    categories: PostCategory[],
     image?: string,
     phone?: string,
     email?: string,

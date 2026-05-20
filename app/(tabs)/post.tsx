@@ -2,7 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Pressable }
 import React, { useRef, useState } from 'react';
 import styles from '@/assets/styles/post.styles';
 import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
-import Checkbox from "expo-checkbox";
+import ExpoCheckbox from "expo-checkbox";
 import { RadioButton } from 'react-native-paper';
 import EventDateList, { EventDateListRef } from '@/components/EventDateList';
 import AddressComponent from '@/components/Address';
@@ -27,7 +27,7 @@ const PostScreen = () => {
     phone, setPhone,
     email, setEmail,
     location,
-    eventDates, setEventDates,
+    eventDates,
     link, setLink,
     frequency,
     description, setDescription,
@@ -46,7 +46,7 @@ const PostScreen = () => {
 
   const { categoriesData } = useCategory();
 
-  const onSelectedCategoriesChange = (selected) => {
+  const onSelectedCategoriesChange = (selected: string[]) => {
     setCategories(selected);
   };
 
@@ -97,7 +97,6 @@ const PostScreen = () => {
               uniqueKey="id"
               onSelectedItemsChange={onSelectedCategoriesChange}
               onToggleList={() => setIsCategoryDropdownOpen((isOpen) => !isOpen)}
-              onClearSelector={() => setIsCategoryDropdownOpen(false)}
               selectedItems={categories}
               selectText="Select categories"
               searchInputPlaceholderText="Search..."
@@ -180,7 +179,7 @@ const PostScreen = () => {
                 style={styles.checkBoxItem} 
                 onPress={() => handleLocationChange("onsite")}
               >
-                <Checkbox
+                <ExpoCheckbox
                   value={location.onsite}
                   onValueChange={() => handleLocationChange("onsite")}
                   color={location.onsite ? COLORS.primary : COLORS.textLight}
@@ -191,7 +190,7 @@ const PostScreen = () => {
                 style={styles.checkBoxItem} 
                 onPress={() => handleLocationChange("online")}
               >
-                <Checkbox
+                <ExpoCheckbox
                   value={location.online}
                   onValueChange={() => handleLocationChange("online")}
                   color={location.online ? COLORS.primary : COLORS.textLight}
@@ -265,11 +264,11 @@ const PostScreen = () => {
                 <TouchableOpacity 
                   key={freq} 
                   style={styles.checkBoxItem} 
-                  onPress={() => handleFrequencyChange(freq as any)}
+                  onPress={() => handleFrequencyChange(freq as keyof typeof frequency)}
                 >
-                  <Checkbox
+                  <ExpoCheckbox
                     value={frequency[freq as keyof typeof frequency]}
-                    onValueChange={() => handleFrequencyChange(freq as any)}
+                    onValueChange={() => handleFrequencyChange(freq as keyof typeof frequency)}
                     color={frequency[freq as keyof typeof frequency] ? COLORS.primary : COLORS.textLight}
                   />
                   <Text style={styles.checkboxLabel}>{freq.charAt(0).toUpperCase() + freq.slice(1)}</Text>

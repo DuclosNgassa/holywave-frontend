@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import React from 'react';
 import { Image } from "expo-image";
 import { COLORS } from '@/constants/colors';
-import { AntDesign, Feather, MaterialCommunityIcons } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import { getOptimizedImage } from '@/utils/helper';
 import { ImageSize } from '@/app/models/types';
 import styles from '@/assets/styles/card.styles';
@@ -21,7 +21,6 @@ interface HorizontalPostCardProps {
 const HorizontalPostCard = ({
     post,
     onPrimaryAction,
-    onSecondaryAction,
     onSelect,
     primaryIcon,
     isPrimaryActive,
@@ -34,7 +33,7 @@ const HorizontalPostCard = ({
     const renderPrimaryIcon = () => {
         switch (primaryIcon) {
             case "heart":
-                return <AntDesign name={isPrimaryActive ? "heart" : "hearto"} size={18} color={isPrimaryActive ? COLORS.favoritLiked : COLORS.textLight} />;
+                return <MaterialCommunityIcons name={isPrimaryActive ? "heart" : "heart-outline"} size={20} color={isPrimaryActive ? COLORS.favoritLiked : COLORS.textLight} />;
             case "bookmark":
                 return <MaterialCommunityIcons name={isPrimaryActive ? "bookmark" : "bookmark-outline"} size={20} color={isPrimaryActive ? COLORS.primary : COLORS.textLight} />;
             case "pencil":

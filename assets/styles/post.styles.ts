@@ -1,8 +1,6 @@
 import { COLORS } from "@/constants/colors";
 import { TYPOGRAPHY } from "@/constants/typography";
-import { StyleSheet, Dimensions } from "react-native";
-
-const { height } = Dimensions.get("window");
+import { StyleSheet, type TextStyle } from "react-native";
 
 const styles = StyleSheet.create({
     container: {
@@ -19,12 +17,12 @@ const styles = StyleSheet.create({
         paddingBottom: 16,
     },
     title: {
-        ...TYPOGRAPHY.h1,
+        ...(TYPOGRAPHY.h1 as TextStyle),
         color: COLORS.text,
         fontSize: 28,
     },
     subtitle: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.textLight,
         marginTop: 4,
     },
@@ -41,7 +39,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     sectionTitle: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 16,
         color: COLORS.text,
         marginBottom: 16,
@@ -51,7 +49,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     label: {
-        ...TYPOGRAPHY.caption,
+        ...(TYPOGRAPHY.caption as TextStyle),
         marginBottom: 8,
         color: COLORS.textLight,
         fontSize: 11,
@@ -71,7 +69,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         height: "100%",
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.text,
         fontSize: 15,
     },
@@ -80,7 +78,7 @@ const styles = StyleSheet.create({
         borderRadius: 14,
         padding: 14,
         height: 120,
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.text,
         fontSize: 15,
         textAlignVertical: 'top',
@@ -102,7 +100,7 @@ const styles = StyleSheet.create({
     },
     checkboxLabel: {
         marginLeft: 8,
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.text,
         fontSize: 14,
     },
@@ -134,7 +132,7 @@ const styles = StyleSheet.create({
         elevation: 6,
     },
     buttonText: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         color: COLORS.white,
         fontSize: 17,
         fontWeight: "700",
@@ -181,7 +179,7 @@ const styles = StyleSheet.create({
         gap: 8,
     },
     placeholderText: {
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.textLight,
         fontSize: 14,
     },
@@ -208,7 +206,7 @@ const styles = StyleSheet.create({
         elevation: 2,
     },
     imageResizeOptionText: {
-        ...TYPOGRAPHY.caption,
+        ...(TYPOGRAPHY.caption as TextStyle),
         color: COLORS.textLight,
         fontSize: 10,
     },

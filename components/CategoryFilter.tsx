@@ -1,8 +1,18 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import styles from "@/assets/styles/home.styles";
-import { ImageSourcePropType } from "react-native";
 
-const CategoryFilter = ({ categories, selectedCategory, onSelectCategory }) => {
+type Category = {
+    id: string;
+    name: string;
+};
+
+type CategoryFilterProps = {
+    categories: Category[];
+    selectedCategory: string;
+    onSelectCategory: (categoryId: string, categoryName: string) => void;
+};
+
+const CategoryFilter = ({ categories, selectedCategory, onSelectCategory }: CategoryFilterProps) => {
 
     const sortedCategories = categories
         .slice()

@@ -1,6 +1,6 @@
 import { COLORS } from "@/constants/colors";
 import { TYPOGRAPHY } from "@/constants/typography";
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, type TextStyle } from "react-native";
 
 const { width } = Dimensions.get("window");
 
@@ -43,12 +43,12 @@ const styles = StyleSheet.create({
         marginBottom: 24,
     },
     title: {
-        ...TYPOGRAPHY.h1,
+        ...(TYPOGRAPHY.h1 as TextStyle),
         color: COLORS.text,
         marginBottom: 8,
     },
     subtitle: {
-        ...TYPOGRAPHY.body,
+        ...(TYPOGRAPHY.body as TextStyle),
         color: COLORS.textLight,
         textAlign: "center",
     },
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     label: {
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         marginBottom: 8,
         color: COLORS.text,
     },
@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         height: 48,
-        ...TYPOGRAPHY.bodySmall,
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
         color: COLORS.text,
     },
     eyeIcon: {
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: COLORS.white,
-        ...TYPOGRAPHY.label,
+        ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 16,
     },
     footer: {
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
         marginTop: 24,
     },
     footerText: {
-        ...TYPOGRAPHY.caption,
+        ...(TYPOGRAPHY.caption as TextStyle),
         color: COLORS.textLight,
         textAlign: "center",
         fontSize: 12,

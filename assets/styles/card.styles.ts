@@ -1,8 +1,6 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, type TextStyle } from "react-native";
 import { COLORS } from "@/constants/colors";
 import { TYPOGRAPHY } from "@/constants/typography";
-
-const { width } = Dimensions.get("window");
 
 const horizontalCardStyles = StyleSheet.create({
   container: {
@@ -37,13 +35,13 @@ const horizontalCardStyles = StyleSheet.create({
     gap: 4,
   },
   categoryText: {
-    ...TYPOGRAPHY.caption,
+    ...(TYPOGRAPHY.caption as TextStyle),
     color: COLORS.primary,
     fontSize: 10,
     marginBottom: 2,
   },
   title: {
-    ...TYPOGRAPHY.label,
+    ...(TYPOGRAPHY.label as TextStyle),
     fontSize: 15,
     color: COLORS.text,
     lineHeight: 20,
@@ -55,7 +53,7 @@ const horizontalCardStyles = StyleSheet.create({
     gap: 6,
   },
   dateText: {
-    ...TYPOGRAPHY.bodySmall,
+    ...(TYPOGRAPHY.bodySmall as TextStyle),
     fontSize: 12,
     color: COLORS.textLight,
   },
@@ -66,7 +64,7 @@ const horizontalCardStyles = StyleSheet.create({
     marginTop: 4,
   },
   priceText: {
-    ...TYPOGRAPHY.label,
+    ...(TYPOGRAPHY.label as TextStyle),
     fontSize: 14,
     color: COLORS.text,
     fontWeight: "700",

@@ -1,6 +1,11 @@
 import { Frequency, Location } from "@/app/models/types";
 
-export const formatDateTimeIntl = (isoString: string) => {
+type FormattedDateTime = {
+    date: string;
+    time: string;
+};
+
+export const formatDateTimeIntl = (isoString: string): FormattedDateTime | undefined => {
     try {
         const d = new Date(isoString);
 
@@ -23,10 +28,10 @@ export const formatDateTimeIntl = (isoString: string) => {
 
 };
 
-export const sortAscAndFormatDates = (arr: string[]) => {
+export const sortAscAndFormatDates = (arr: string[]): FormattedDateTime[] => {
     return [...arr]
         .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())
-        .map((iso) => {
+        .reduce<FormattedDateTime[]>((dates, iso) => {
             try {
                 const d = new Date(iso);
                 const date = new Intl.DateTimeFormat('en-GB', {
@@ -39,12 +44,13 @@ export const sortAscAndFormatDates = (arr: string[]) => {
                     minute: '2-digit',
                     hour12: false,
                 }).format(d);
-                return { date, time };
+                dates.push({ date, time });
             } catch (error) {
                 console.log(iso);
                 console.log(error);
             }
-        });
+            return dates;
+        }, []);
 };
 
 // Format a number to a shorter format (e.g., 1000 -> 1K)

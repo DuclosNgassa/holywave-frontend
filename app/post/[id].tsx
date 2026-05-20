@@ -11,41 +11,26 @@ import { COLORS } from '@/constants/colors';
 import { formattedFrequency, formattedLocation, sortAscAndFormatDates } from '@/utils/formatters';
 import { useFocusEffect } from '@react-navigation/native';
 import { usePost } from '@/hooks/usePost';
-import { useCurrentUser } from '@/hooks/useCurrentUser';
-import ShareButton from '@/components/ShareButton';
 import { getOptimizedImage } from '@/utils/helper';
 import { ImageSize } from '../models/types';
 import ImageModalViewer from '@/components/ImageModalViewer';
+import type { PostCategory } from '../models/post';
 
 const PostDetailScreen = () => {
     const router = useRouter();
-    const { currentUser } = useCurrentUser();
 
     const { id } = useLocalSearchParams();
     const postId = Array.isArray(id) ? id[0] : id;
     const { userId } = useAuth();
-    const [isSaving, setIsSaving] = useState(false);
-    const [isSaved, setIsSaved] = useState(false);
     const [isImageModalVisible, setIsImageModalVisible] = useState(false);
 
-    const { post, isLoadingPost, errorPost, refetchPost, toggleLike, toggleBookmark, checkIsLiked, checkIsBookmarked } = usePost({ postId });
+    const { post, isLoadingPost, errorPost, refetchPost, toggleBookmark } = usePost({ postId });
 
     useFocusEffect(
         useCallback(() => {
             refetchPost(); // Refetch data when the screen is focused
         }, [refetchPost])
     );
-
-    const handleBookmarkt = async (postId: string) => {
-        setIsSaving(true);
-        try {
-            //TODO implement me
-        } catch (error) {
-
-        } finally {
-            setIsSaving(false);
-        }
-    }
 
     const openImageModal = () => {
         setIsImageModalVisible(true);
@@ -63,6 +48,10 @@ const PostDetailScreen = () => {
     if (isLoadingPost) {
         return <LoadingSpinner message='Loading post detail...' />
     }
+
+    const categoryNames = post.categories
+        ?.map((category: PostCategory) => typeof category === "string" ? category : category.name)
+        .join(' - ');
 
     return (
         <View style={styles.container}>
@@ -100,11 +89,11 @@ const PostDetailScreen = () => {
                         <View style={styles.rightButtons}>
                             {userId === post.userId &&
                                 <TouchableOpacity
-                                    style={[styles.floatingButton, { backgroundColor: isSaving ? COLORS.slateGrey : "rgba(0,0,0,0.3)" }]}
+                                    style={styles.floatingButton}
                                     onPress={() => router.push(`/post/edit/${post.id}`)}
                                 >
                                     <FontAwesome6
-                                        name={isSaving ? 'hourglass-half' : 'pencil'} size={18} color={COLORS.white}
+                                        name='pencil' size={18} color={COLORS.white}
                                     />
                                 </TouchableOpacity>
                             }
@@ -116,7 +105,7 @@ const PostDetailScreen = () => {
                                     name="bookmark"
                                     solid={post.bookmarked}
                                     size={18}
-                                    color={post.bookmarked ? COLORS.favoritLiked : COLORS.white}
+                                    color={post.bookmarked ? COLORS.primary : COLORS.white}
                                 />
                             </TouchableOpacity>
                         </View>
@@ -126,7 +115,7 @@ const PostDetailScreen = () => {
                         {post.categories && post.categories.length > 0 &&
                             <View style={styles.categoryBadge}>
                                 <Text style={styles.categoryText}>
-                                    {post.categories.map((category: any) => category.name).join(' - ')}
+                                    {categoryNames}
                                 </Text>
                             </View>
                         }
@@ -176,7 +165,7 @@ const PostDetailScreen = () => {
                             </View>
                             <View style={styles.infoContent}>
                                 <Text style={styles.infoLabel}>Dates</Text>
-                                {sortAscAndFormatDates(post.eventDates).filter((item) => item !== undefined).map((item, index) => (
+                                {sortAscAndFormatDates(post.eventDates).map((item, index) => (
                                     <Text key={index} style={styles.infoValue}>{item.date} - {item.time} </Text>))
                                 }
                             </View>

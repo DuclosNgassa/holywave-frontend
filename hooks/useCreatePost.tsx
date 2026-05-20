@@ -11,10 +11,9 @@ import { compressImageForUpload, DEFAULT_IMAGE_RESIZE_OPTION, ImageResizeOption 
 
 export const useCreatePost = () => {
     const api = useApiClient();
-    const [postId, setPostId] = useState("");
     /** UseState */
     const [title, setTitle] = useState("");
-    const [categories, setCategories] = useState([]);;
+    const [categories, setCategories] = useState<string[]>([]);
     const [imageUri, setImageUri] = useState<string>("");
     const [imageAsset, setImageAsset] = useState<ImagePickerAsset | null>(null);
     const [imageResizeOption, setImageResizeOption] = useState<ImageResizeOption>(DEFAULT_IMAGE_RESIZE_OPTION);
@@ -166,7 +165,7 @@ export const useCreatePost = () => {
             uri: imageUri,
             name: `image.${fileType}`,
             type: mimeType
-        });
+        } as any);
 
         const response = await postApi.uploadImage(api, formData);
         return response.data;
