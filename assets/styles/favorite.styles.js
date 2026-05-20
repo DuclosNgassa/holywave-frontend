@@ -1,14 +1,60 @@
 import { COLORS } from "@/constants/colors.js";
+import { TYPOGRAPHY } from "@/constants/typography.js";
 import { StyleSheet, Dimensions } from "react-native";
 
+const { width, height } = Dimensions.get("window");
 
 const favoriteStyles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: COLORS.background,
+    },
+    sectionHeader: {
+        marginTop: 16,
+        marginBottom: 24,
+        paddingHorizontal: 16,
+    },
+    header: {
+        flexDirection: "row",
+        backgroundColor: "#E9ECEF",
+        borderRadius: 16,
+        padding: 4,
+        alignItems: "center",
+        justifyContent: "space-between",
+    },
+    tabButton: {
+        flex: 1,
+        height: 44,
+        borderRadius: 12,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    tabActive: {
+        backgroundColor: COLORS.white,
+        shadowColor: "rgba(0,0,0,0.1)",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 1,
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    tabInActive: {
+        backgroundColor: "transparent",
+    },
+    buttonText: {
+        ...TYPOGRAPHY.label,
+        fontSize: 14,
+        color: "#6C757D",
+    },
+    buttonTextActive: {
+        color: COLORS.primary,
+        fontWeight: "700",
+    },
     card: {
         backgroundColor: COLORS.cardBackground,
         borderRadius: 16,
         padding: 10,
         marginHorizontal: 10,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
@@ -19,94 +65,34 @@ const favoriteStyles = StyleSheet.create({
     containerCard: {
         flex: 1,
         flexDirection: 'row',
-        gap: '10',
+        gap: 10,
     },
-    container: {
-        flex: 1,
-        flexDirection: "column",
-        backgroundColor: COLORS.background,
-        gap: '10',
-        marginTop: 0,
-        marginBottom:0,
-        paddingVertical:8
-    },
-     header: {
-        flex: 1,
-        flexDirection: "row",
-        justifyContent: "center",
-        marginBottom: 8,
-    },
-    tabActive: {
-        backgroundColor: COLORS.primary,
-        borderRadius: 5,
-        height: 35,
-        //flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        //marginTop: 8,
-        marginRight: 2,
-        paddingHorizontal: 8,
-        shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    tabLogout: {
-        gap: 12,
+    logoutFAB: {
+        //bottom: 0,
+        position: 'absolute',
+        right: 24,
+        width: 48,
+        height: 48,
+        borderRadius: 24,
         backgroundColor: COLORS.red,
-        borderRadius: 5,
-        height: 35,
-        //flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        //marginTop: 8,
-        marginRight: 2,
-        paddingHorizontal: 8,
-        shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    tabInActive: {
-        backgroundColor: COLORS.textSecondary,
-        borderRadius: 5,
-        height: 35,
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-        marginRight: 2,
-        paddingHorizontal: 8,
-        shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    buttonText: {
-        color: COLORS.white,
-        fontSize: 14,
-        fontWeight: "600",
+        justifyContent: 'center',
+        alignItems: 'center',
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+        elevation: 10,
+        zIndex: 100,
     },
     title: {
+        ...TYPOGRAPHY.label,
         fontSize: 15,
-        fontWeight: "500",
         color: COLORS.text,
     },
     text: {
+        ...TYPOGRAPHY.bodySmall,
         fontSize: 12,
         color: COLORS.textDark,
-    },
-    sectionHeader: {
-        marginBottom: 30,
-        //paddingHorizontal: 16,
-    },
-    sectionTitle: {
-        fontSize: 20,
-        fontWeight: "600",
-        color: COLORS.text,
-        letterSpacing: -0.5,
     },
     image: {
         width: "100%",
@@ -128,14 +114,15 @@ const favoriteStyles = StyleSheet.create({
         alignContent: 'space-between'
     },
     address: {
+        ...TYPOGRAPHY.label,
         fontSize: 13,
         color: COLORS.textSecondary,
     },
     feeText: {
+        ...TYPOGRAPHY.h3,
         fontSize: 16,
         color: COLORS.primary,
         marginLeft: 4,
-        fontWeight: "500",
     },
     locationRow: {
         flexDirection: "row",
@@ -169,12 +156,10 @@ const favoriteStyles = StyleSheet.create({
         alignItems: 'flex-end',
         alignContent: "space-between"
     },
-
     footerTextFavorit: {
         flex: 1,
         alignItems: 'flex-start'
     },
-
     footerText: {
         flex: 1,
         alignItems: 'flex-start'
@@ -195,7 +180,6 @@ const favoriteStyles = StyleSheet.create({
     deleteButton: {
         color: COLORS.red,
     },
-
     editButton: {
         color: COLORS.primary,
     },
@@ -207,7 +191,7 @@ const favoriteStyles = StyleSheet.create({
         alignItems: "center",
         marginTop: 16,
         padding: 10,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -233,18 +217,16 @@ const favoriteStyles = StyleSheet.create({
         paddingHorizontal: 32,
     },
     emptyTitle: {
-        fontSize: 20,
-        fontWeight: "700",
+        ...TYPOGRAPHY.h3,
         color: COLORS.text,
         marginTop: 16,
         marginBottom: 8,
     },
     emptyDescription: {
-        fontSize: 14,
+        ...TYPOGRAPHY.bodySmall,
         color: COLORS.textLight,
         textAlign: "center",
     },
-
 });
 
 export default favoriteStyles;

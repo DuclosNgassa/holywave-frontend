@@ -1,13 +1,12 @@
-import { View, Text, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity } from 'react-native';
-import React from 'react';
+import { View, Text, ActivityIndicator, KeyboardAvoidingView, Platform, ScrollView, TextInput, TouchableOpacity, Pressable } from 'react-native';
+import React, { useRef, useState } from 'react';
 import { useUpdatePost } from '@/hooks/useUpdatePost';
-import { useAuth } from '@clerk/clerk-expo';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import styles from '@/assets/styles/post.styles';
 import AddressComponent from '@/components/Address';
-import EventDateList from '@/components/EventDateList';
+import EventDateList, { EventDateListRef } from '@/components/EventDateList';
 import { COLORS } from '@/constants/colors';
-import { Feather } from '@expo/vector-icons';
+import { Feather, MaterialCommunityIcons } from '@expo/vector-icons';
 import Checkbox from 'expo-checkbox';
 import { RadioButton } from 'react-native-paper';
 import { useCategory } from '@/hooks/useCategory';
@@ -16,10 +15,11 @@ import ImagePickerView from '@/components/ImagePickerView';
 
 const PostEditScreen = () => {
   const router = useRouter();
+  const categorySelectRef = useRef<any>(null);
+  const eventDateListRef = useRef<EventDateListRef>(null);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
 
   const { editId: postId } = useLocalSearchParams();
-  const { userId } = useAuth();
-  //const { post, isLoading } = useGetPost(postId);
   const {
     title, setTitle,
     categories, setCategories,
@@ -35,8 +35,7 @@ const PostEditScreen = () => {
     fee, setFee,
     paidEvent,
     address,
-    loading, setLoading,
-    isCreating,
+    loading,
     removeImage,
     pickImage,
     handleLocationChange,
@@ -45,102 +44,112 @@ const PostEditScreen = () => {
     handleEventDatesChange,
     handleAddressChange,
     updatePost,
-  } = useUpdatePost(postId);
+  } = useUpdatePost(postId as string);
 
-  const { categoriesData, isLoadingCategories, errorCategories } = useCategory();
-  if (isLoadingCategories) {
-  }
-  if (errorCategories) {
-    console.log("Error: ", errorCategories);
-  }
+  const { categoriesData } = useCategory();
 
   const onSelectedCategoriesChange = (selected) => {
     setCategories(selected);
-    console.log("SelectedItems: ", selected);
+  };
+
+  const closeOpenSelectionViews = () => {
+    if (isCategoryDropdownOpen) {
+      categorySelectRef.current?._clearSelectorCallback?.();
+      setIsCategoryDropdownOpen(false);
+    }
+    eventDateListRef.current?.closePickers();
   };
 
   return (
-
     <KeyboardAvoidingView
       style={{ flex: 1 }}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
     >
-      <ScrollView style={styles.scrollViewStyle} contentContainerStyle={styles.container}>
-        <View style={styles.card}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+      <ScrollView 
+        style={styles.scrollViewStyle} 
+        contentContainerStyle={styles.container}
+        showsVerticalScrollIndicator={false}
+      >
+        <Pressable onPress={closeOpenSelectionViews}>
+          {/** Header with Back Button */}
+          <View style={[styles.header, { flexDirection: 'row', alignItems: 'center', gap: 12 }]}>
             <TouchableOpacity
-              style={styles.floatingButton}
               onPress={() => router.back()}
+              style={{
+                width: 44,
+                height: 44,
+                borderRadius: 22,
+                backgroundColor: COLORS.white,
+                justifyContent: 'center',
+                alignItems: 'center',
+                shadowColor: "#000",
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.1,
+                shadowRadius: 4,
+                elevation: 3,
+              }}
             >
-              <Feather
-                name='arrow-left' size={24} color={COLORS.white}
-              />
+              <Feather name='arrow-left' size={24} color={COLORS.text} />
             </TouchableOpacity>
-            <Text style={styles.titleEdit}>Add Event recommendation</Text>
-
+            <View>
+              <Text style={styles.title}>Edit Event</Text>
+              <Text style={styles.subtitle}>Update the details of your event</Text>
+            </View>
           </View>
-          {/**Header */}
-          <View style={styles.header}>
 
-            <Text style={styles.subtitle}>Share upcoming events with others</Text>
-          </View>
-          {/**Form */}
-          <View style={styles.form}>
-            {/** Title */}
+          {/** Basic Info Section */}
+          <View style={styles.sectionCard}>
+            <Text style={styles.sectionTitle}>Basic Information</Text>
+            
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Event title</Text>
+              <Text style={styles.label}>Event Title</Text>
               <View style={styles.inputContainer}>
-                <Feather
-                  name='book'
-                  size={20}
-                  color={COLORS.textSecondary}
-                  style={styles.inputIcon} />
+                <Feather name='type' size={18} color={COLORS.textLight} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
-                  placeholder='Enter the event´s title'
+                  placeholder='What is the event called?'
                   placeholderTextColor={COLORS.placeholderText}
                   value={title}
                   onChangeText={setTitle}
                 />
               </View>
             </View>
-            {/** Categories */}
-            <View>
+
+            <View style={styles.formGroup} onTouchStart={(e) => e.stopPropagation()}>
+              <Text style={styles.label}>Category</Text>
               <MultiSelect
+                ref={categorySelectRef}
                 items={categoriesData}
                 uniqueKey="id"
                 onSelectedItemsChange={onSelectedCategoriesChange}
+                onToggleList={() => setIsCategoryDropdownOpen((isOpen) => !isOpen)}
+                onClearSelector={() => setIsCategoryDropdownOpen(false)}
                 selectedItems={categories}
-                selectText="Pick category"
-                searchInputPlaceholderText="Search Items..."
+                selectText="Select categories"
+                searchInputPlaceholderText="Search..."
                 tagRemoveIconColor={COLORS.red}
                 tagBorderColor={COLORS.border}
-                tagTextColor={COLORS.textSecondary}
+                tagTextColor={COLORS.textLight}
                 selectedItemTextColor={COLORS.primary}
                 selectedItemIconColor={COLORS.primary}
-                itemTextColor="#000"
+                itemTextColor={COLORS.text}
                 displayKey="name"
                 styleInputGroup={styles.inputContainer}
-                styleTextDropdownSelected={{ color: COLORS.textPrimary, paddingLeft: 10 }}
-                styleTextDropdown={{ color: COLORS.textSecondary, paddingLeft: 10 }}
+                styleTextDropdownSelected={{ color: COLORS.text, paddingLeft: 10 }}
+                styleTextDropdown={{ color: COLORS.textLight, paddingLeft: 10 }}
                 styleIndicator={{ paddingBottom: 25 }}
                 styleDropdownMenuSubsection={styles.inputContainer4}
-                submitButtonText="Submit"
                 hideSubmitButton={true}
                 fixedHeight={true}
                 styleItemsContainer={styles.inputContainer3}
-                styleMainWrapper={styles.inputContainer2}
-                flatListProps={{
-                  scrollEnabled: false,            // disable internal scrolling
-                  // If needed, pass extraProps like onEndReachedThreshold, etc.
-                }}
-                styleListContainer={{ maxHeight: 256 }}
+                styleMainWrapper={styles.multiSelectContainer}
+                styleListContainer={{ maxHeight: 200 }}
                 hideDropdown={true}
               />
             </View>
-            {/* Image */}
+
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Book image</Text>
+              <Text style={styles.label}>Event Banner</Text>
               <ImagePickerView
                 imageUri={imageUri}
                 onPickImage={pickImage}
@@ -149,36 +158,34 @@ const PostEditScreen = () => {
                 onResizeOptionChange={setImageResizeOption}
               />
             </View>
-            {/* Telephone */}
+          </View>
+
+          {/** Contact Section */}
+          <View style={styles.sectionCard}>
+            <Text style={styles.sectionTitle}>Contact Details</Text>
+            
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Contact</Text>
+              <Text style={styles.label}>Phone Number</Text>
               <View style={styles.inputContainer}>
-                <Feather
-                  name='phone'
-                  size={20}
-                  color={COLORS.textSecondary}
-                  style={styles.inputIcon} />
+                <Feather name='phone' size={18} color={COLORS.textLight} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
-                  placeholder='Phone number'
+                  placeholder='+1 234 567 890'
                   placeholderTextColor={COLORS.placeholderText}
                   value={phone}
                   onChangeText={setPhone}
+                  keyboardType='phone-pad'
                 />
               </View>
             </View>
-            {/* Email */}
+
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Email</Text>
+              <Text style={styles.label}>Email Address</Text>
               <View style={styles.inputContainer}>
-                <Feather
-                  name='mail'
-                  size={20}
-                  color={COLORS.textSecondary}
-                  style={styles.inputIcon} />
+                <Feather name='mail' size={18} color={COLORS.textLight} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
-                  placeholder='example@eaxample.comr'
+                  placeholder='hello@event.com'
                   placeholderTextColor={COLORS.placeholderText}
                   value={email}
                   keyboardType='email-address'
@@ -186,106 +193,59 @@ const PostEditScreen = () => {
                 />
               </View>
             </View>
-            {/* Location */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Loaction</Text>
-              <View style={styles.checkBoxContainer}>
-                <View style={styles.checkBoxItem}>
-                  <Checkbox
-                    value={location.online}
-                    onValueChange={() => handleLocationChange("online")}
-                    color={location.online ? COLORS.primary : COLORS.textSecondary}
-                  />
-                  <Text style={styles.checkboxLabel}>Online</Text>
-                </View>
+          </View>
 
-                <View style={styles.checkBoxItem}>
+          {/** Logistics Section */}
+          <View style={styles.sectionCard}>
+            <Text style={styles.sectionTitle}>Logistics & Fee</Text>
+            
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Type of Event</Text>
+              <View style={styles.checkBoxContainer}>
+                <TouchableOpacity 
+                  style={styles.checkBoxItem} 
+                  onPress={() => handleLocationChange("onsite")}
+                >
                   <Checkbox
                     value={location.onsite}
                     onValueChange={() => handleLocationChange("onsite")}
-                    color={location.onsite ? COLORS.primary : COLORS.textSecondary}
+                    color={location.onsite ? COLORS.primary : COLORS.textLight}
                   />
                   <Text style={styles.checkboxLabel}>Onsite</Text>
-                </View>
+                </TouchableOpacity>
+                <TouchableOpacity 
+                  style={styles.checkBoxItem} 
+                  onPress={() => handleLocationChange("online")}
+                >
+                  <Checkbox
+                    value={location.online}
+                    onValueChange={() => handleLocationChange("online")}
+                    color={location.online ? COLORS.primary : COLORS.textLight}
+                  />
+                  <Text style={styles.checkboxLabel}>Online</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            {/** Address */}
+
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Address</Text>
+              <Text style={styles.label}>Location & Address</Text>
               <AddressComponent address={address} onChange={handleAddressChange} />
             </View>
-            {/* Link */}
+
             <View style={styles.formGroup}>
-              <Text style={styles.label}>Online link</Text>
+              <Text style={styles.label}>Online Link (Optional)</Text>
               <View style={styles.inputContainer}>
-                <Feather
-                  name='link'
-                  size={20}
-                  color={COLORS.textSecondary}
-                  style={styles.inputIcon} />
+                <Feather name='link' size={18} color={COLORS.textLight} style={styles.inputIcon} />
                 <TextInput
                   style={styles.input}
-                  placeholder='Link for online'
+                  placeholder='https://zoom.us/...'
                   placeholderTextColor={COLORS.placeholderText}
                   value={link}
                   onChangeText={setLink}
                 />
               </View>
             </View>
-            {/** Date and time */}
-            <EventDateList eventDates={eventDates} onChange={handleEventDatesChange} />
-            {/** Frequency */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Frequency</Text>
-              <View style={styles.checkBoxContainer}>
-                <View style={styles.checkBoxItem}>
-                  <Checkbox
-                    value={frequency.daily}
-                    onValueChange={() => handleFrequencyChange("daily")}
-                    color={frequency.daily ? COLORS.primary : COLORS.textSecondary}
-                  />
-                  <Text style={styles.checkboxLabel}>Daily</Text>
-                </View>
 
-                <View style={styles.checkBoxItem}>
-                  <Checkbox
-                    value={frequency.weekly}
-                    onValueChange={() => handleFrequencyChange("weekly")}
-                    color={frequency.weekly ? COLORS.primary : COLORS.textSecondary}
-                  />
-                  <Text style={styles.checkboxLabel}>Weekly</Text>
-                </View>
-                <View style={styles.checkBoxItem}>
-                  <Checkbox
-                    value={frequency.monthly}
-                    onValueChange={() => handleFrequencyChange("monthly")}
-                    color={frequency.monthly ? COLORS.primary : COLORS.textSecondary}
-                  />
-                  <Text style={styles.checkboxLabel}>Monthly</Text>
-                </View>
-                <View style={styles.checkBoxItem}>
-                  <Checkbox
-                    value={frequency.yearly}
-                    onValueChange={() => handleFrequencyChange("yearly")}
-                    color={frequency.yearly ? COLORS.primary : COLORS.textSecondary}
-                  />
-                  <Text style={styles.checkboxLabel}>Yearly</Text>
-                </View>
-              </View>
-            </View>
-            {/* Description */}
-            <View style={styles.formGroup}>
-              <Text style={styles.label}>Description</Text>
-              <TextInput
-                style={styles.textArea}
-                placeholder='Write additional info about the event...'
-                placeholderTextColor={COLORS.placeholderText}
-                value={description}
-                onChangeText={setDescription}
-                multiline
-              />
-            </View>
-            {/* Event fee */}
             <View style={styles.formGroup}>
               <Text style={styles.label}>Event Fee</Text>
               <RadioButton.Group
@@ -293,41 +253,86 @@ const PostEditScreen = () => {
                 value={paidEvent}
               >
                 <View style={styles.checkBoxContainer}>
-                  <RadioButton.Item style={styles.radioItemFee} label="Free" value="free" />
-                  <RadioButton.Item style={styles.radioItemFee} label="Paid" value="paid" />
-                  {paidEvent === "paid" && (
-                    <View style={styles.inputContainerFee}>
-                      <Feather
-                        name='dollar-sign'
-                        size={20}
-                        color={COLORS.textSecondary}
-                        style={styles.inputIcon} />
-                      <TextInput
-                        style={styles.input}
-                        placeholder='Amount'
-                        placeholderTextColor={COLORS.placeholderText}
-                        value={fee}
-                        keyboardType='decimal-pad'
-                        onChangeText={setFee}
-                      />
-                    </View>
-                  )}
+                  <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+                      <RadioButton.Android value="free" color={COLORS.primary} />
+                      <Text style={styles.checkboxLabel}>Free</Text>
+                  </View>
+                  <View style={{flexDirection: 'row', alignItems: 'center', flex: 1}}>
+                      <RadioButton.Android value="paid" color={COLORS.primary} />
+                      <Text style={styles.checkboxLabel}>Paid</Text>
+                  </View>
                 </View>
               </RadioButton.Group>
-            </View>
-            {/** Share button */}
-            <TouchableOpacity style={styles.button} onPress={updatePost} disabled={loading}>
-              {loading ? (
-                <ActivityIndicator color={COLORS.white} />
-              ) : (
-                <Text style={styles.buttonText}>Update</Text>
+              {paidEvent === "paid" && (
+                <View style={styles.inputContainerFee}>
+                  <Feather name='dollar-sign' size={18} color={COLORS.primary} style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder='0.00'
+                    placeholderTextColor={COLORS.placeholderText}
+                    value={fee?.toString()}
+                    keyboardType='decimal-pad'
+                    onChangeText={setFee}
+                  />
+                </View>
               )}
-            </TouchableOpacity>
+            </View>
           </View>
-        </View>
+
+          {/** Schedule Section */}
+          <View style={styles.sectionCard}>
+            <Text style={styles.sectionTitle}>Schedule</Text>
+            <EventDateList ref={eventDateListRef} eventDates={eventDates} onChange={handleEventDatesChange} />
+            
+            <View style={styles.formGroup}>
+              <Text style={styles.label}>Recurring frequency</Text>
+              <View style={styles.checkBoxContainer}>
+                {['daily', 'weekly', 'monthly', 'yearly'].map((freq) => (
+                  <TouchableOpacity 
+                    key={freq} 
+                    style={styles.checkBoxItem} 
+                    onPress={() => handleFrequencyChange(freq as any)}
+                  >
+                    <Checkbox
+                      value={frequency[freq as keyof typeof frequency]}
+                      onValueChange={() => handleFrequencyChange(freq as any)}
+                      color={frequency[freq as keyof typeof frequency] ? COLORS.primary : COLORS.textLight}
+                    />
+                    <Text style={styles.checkboxLabel}>{freq.charAt(0).toUpperCase() + freq.slice(1)}</Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </View>
+          </View>
+
+          {/** Description Section */}
+          <View style={styles.sectionCard}>
+            <Text style={styles.sectionTitle}>Description</Text>
+            <TextInput
+              style={styles.textArea}
+              placeholder='Tell people more about this event...'
+              placeholderTextColor={COLORS.placeholderText}
+              value={description}
+              onChangeText={setDescription}
+              multiline
+            />
+          </View>
+
+          {/** Update Button */}
+          <TouchableOpacity style={styles.button} onPress={updatePost} disabled={loading}>
+            {loading ? (
+              <ActivityIndicator color={COLORS.white} />
+            ) : (
+              <>
+                <MaterialCommunityIcons name="content-save-check" size={20} color={COLORS.white} style={{marginRight: 8}} />
+                <Text style={styles.buttonText}>Save Changes</Text>
+              </>
+            )}
+          </TouchableOpacity>
+        </Pressable>
       </ScrollView>
     </KeyboardAvoidingView>
-  )
-}
+  );
+};
 
-export default PostEditScreen
+export default PostEditScreen;

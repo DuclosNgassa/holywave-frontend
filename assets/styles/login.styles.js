@@ -1,4 +1,5 @@
 import { COLORS } from "@/constants/colors";
+import { TYPOGRAPHY } from "@/constants/typography";
 import { StyleSheet, Dimensions } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -28,7 +29,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.cardBackground,
         borderRadius: 16,
         padding: 24,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
@@ -42,14 +43,13 @@ const styles = StyleSheet.create({
         marginBottom: 24,
     },
     title: {
-        fontSize: 32,
-        fontWeight: "700",
-        color: COLORS.textPrimary,
+        ...TYPOGRAPHY.h1,
+        color: COLORS.text,
         marginBottom: 8,
     },
     subtitle: {
-        fontSize: 16,
-        color: COLORS.textSecondary,
+        ...TYPOGRAPHY.body,
+        color: COLORS.textLight,
         textAlign: "center",
     },
     formContainer: {
@@ -63,10 +63,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     label: {
-        fontSize: 14,
+        ...TYPOGRAPHY.label,
         marginBottom: 8,
-        color: COLORS.textPrimary,
-        fontWeight: "500",
+        color: COLORS.text,
     },
     inputContainer: {
         flexDirection: "row",
@@ -83,7 +82,8 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         height: 48,
-        color: COLORS.textDark,
+        ...TYPOGRAPHY.bodySmall,
+        color: COLORS.text,
     },
     eyeIcon: {
         padding: 8,
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: 16,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: COLORS.white,
+        ...TYPOGRAPHY.label,
         fontSize: 16,
-        fontWeight: "600",
     },
     footer: {
         flexDirection: "row",
@@ -143,15 +143,17 @@ const styles = StyleSheet.create({
         marginTop: 24,
     },
     footerText: {
-        color: "#6B7280",      // gray-500
+        ...TYPOGRAPHY.caption,
+        color: COLORS.textLight,
         textAlign: "center",
         fontSize: 12,
         lineHeight: 16,
         marginTop: 24,
         paddingHorizontal: 8,
+        textTransform: 'none',
     },
     link: {
-        color: "#3B82F6",      // blue-500
+        color: COLORS.primary,
         fontWeight: "600",
     },
 });

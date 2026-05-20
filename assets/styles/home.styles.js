@@ -1,4 +1,5 @@
 import { COLORS } from "@/constants/colors.js";
+import { TYPOGRAPHY } from "@/constants/typography.js";
 import { StyleSheet, Dimensions } from "react-native";
 
 const { width } = Dimensions.get("window");
@@ -23,10 +24,8 @@ const homeStyles = StyleSheet.create({
         justifyContent: "space-between",
     },
     welcomeText: {
-        fontSize: 32,
-        fontWeight: "800",
+        ...TYPOGRAPHY.h1,
         color: COLORS.text,
-        letterSpacing: -0.5,
     },
     featuredSection: {
         paddingHorizontal: 20,
@@ -68,16 +67,14 @@ const homeStyles = StyleSheet.create({
         alignSelf: "flex-start",
     },
     featuredBadgeText: {
+        ...TYPOGRAPHY.caption,
         color: COLORS.white,
-        fontSize: 12,
-        fontWeight: "600",
     },
     featuredContent: {
         justifyContent: "flex-end",
     },
     featuredTitle: {
-        fontSize: 24,
-        fontWeight: "800",
+        ...TYPOGRAPHY.h2,
         color: COLORS.white,
         marginBottom: 12,
         textShadowColor: "rgba(0,0,0,0.3)",
@@ -97,288 +94,288 @@ const homeStyles = StyleSheet.create({
         paddingHorizontal: 32,
     },
     emptyTitle: {
-        fontSize: 20,
-        fontWeight: "700",
+        ...TYPOGRAPHY.h3,
         color: COLORS.text,
         marginTop: 16,
         marginBottom: 8,
     },
     emptyDescription: {
-        fontSize: 14,
+        ...TYPOGRAPHY.bodySmall,
         color: COLORS.textLight,
         textAlign: "center",
     },
     categoryFilterContainer: {
-        marginTop: 5,
+        marginTop: 12,
+        marginBottom: 8,
     },
     categoryFilterScrollContent: {
-        gap: 5,
+        paddingHorizontal: 12,
+        gap: 8,
     },
     categoryButton: {
-        flexDirection: "column",
-        alignItems: "center",
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        borderRadius: 25,
+        backgroundColor: "#F1F3F5", // Soft grey background
         justifyContent: "center",
-        backgroundColor: COLORS.card,
-        paddingVertical: 5,
-        borderRadius: 10,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-        minWidth: 80,
-        shadowColor: COLORS.shadow,
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.05,
-        shadowRadius: 4,
-        elevation: 2,
+        alignItems: "center",
+        minWidth: 60,
     },
     selectedCategory: {
         backgroundColor: COLORS.primary,
-        borderColor: COLORS.primary,
-        shadowOpacity: 0.15,
-    },
-    categoryImage: {
-        width: 40,
-        height: 40,
-        borderRadius: 20,
-        backgroundColor: COLORS.border,
-    },
-    nearByImage: {
-        width: "100%",
-        borderRadius: 10,
-        backgroundColor: COLORS.border,
-    },
-    selectedCategoryImage: {
-        borderWidth: 2,
-        borderColor: COLORS.white,
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 4,
     },
     categoryText: {
-        fontSize: 10,
-        fontWeight: "500",
-        color: COLORS.textDark,
-        textAlign: "center",
+        ...TYPOGRAPHY.label,
+        fontSize: 14,
+        color: "#6C757D", // Neutral grey text
     },
     selectedCategoryText: {
-        fontSize: 11,
         color: COLORS.white,
+        fontWeight: "700",
     },
-    inputIcon: {
-        marginRight: 10,
-    },
-    input: {
-        flex: 1,
-        height: 48,
-        color: COLORS.textDark,
-    },
-    searchFieldInputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        flex: 1,
-        backgroundColor: COLORS.inputBackground,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: COLORS.border,
+    formGroup: {
+        marginTop: 16,
+        marginBottom: 8,
         paddingHorizontal: 12,
     },
     inputContainer: {
         flexDirection: "row",
         alignItems: "center",
-        backgroundColor: COLORS.inputBackground,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: COLORS.border,
+        backgroundColor: COLORS.white, // Pure white for the field
+        borderRadius: 16,
+        paddingHorizontal: 16,
+        height: 56, // Slightly taller for better touch target
+        shadowColor: "rgba(0,0,0,0.05)",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 12,
+        elevation: 2,
     },
-    formGroup: {
-        marginVertical: 0,
+    searchFieldInputContainer: {
+        flexDirection: "row",
+        alignItems: "center",
+        flex: 1,
+    },
+    inputIcon: {
+        marginRight: 12,
+    },
+    input: {
+        flex: 1,
+        height: "100%",
+        ...TYPOGRAPHY.body,
+        color: COLORS.text,
+        fontSize: 16,
     },
     scrollViewStyle: {
         flex: 1,
         backgroundColor: COLORS.background,
     },
+    listFadeOverlay: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 120, // Height of the fade effect
+    },
 });
 
 export const recipeCardStyles = StyleSheet.create({
     container: {
-        width: cardWidth,
-        backgroundColor: COLORS.card,
-        borderRadius: 5,
-        marginBottom: 10,
-        shadowColor: COLORS.shadow,
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 4,
-        overflow: "hidden",
+        flexDirection: 'row',
+        backgroundColor: COLORS.white,
+        padding: 12,
+        marginBottom: 12,
+        borderRadius: 20,
+        alignItems: 'center',
+        gap: 16,
     },
     imageContainer: {
-/*         position: "relative",
-        height: 150,
- */    
-        width: "100%",
-        //height: "140",
-        aspectRatio: 1, 
+        width: 100,
+        height: 100,
+        borderRadius: 16,
         overflow: "hidden",
+        backgroundColor: COLORS.background,
     },
     image: {
         width: "100%",
         height: "100%",
-        backgroundColor: COLORS.border,
     },
     content: {
-        padding: 8,
+        flex: 1,
+        justifyContent: 'center',
+        gap: 4,
     },
-    address: {
-        fontSize: 13,
-        color: COLORS.textSecondary,
-    },
-
-    title: {
-        fontSize: 14,
-        color: COLORS.textDark,
-    },
-    description: {
-        fontSize: 12,
+    categoryText: {
+        ...TYPOGRAPHY.caption,
         color: COLORS.textLight,
+        fontSize: 11,
+    },
+    title: {
+        ...TYPOGRAPHY.label,
+        fontSize: 16,
+        color: COLORS.text,
+        lineHeight: 20,
         marginBottom: 8,
+    },
+    metaRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 8,
+    },
+    authorAvatar: {
+        width: 24,
+        height: 24,
+        borderRadius: 12,
+        backgroundColor: COLORS.background,
+    },
+    authorName: {
+        ...TYPOGRAPHY.bodySmall,
+        fontSize: 13,
+        color: COLORS.textLight,
+    },
+    dot: {
+        color: COLORS.textLight,
+        fontSize: 14,
+    },
+    dateText: {
+        ...TYPOGRAPHY.bodySmall,
+        fontSize: 13,
+        color: COLORS.textLight,
     },
     footer: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+        marginTop: 4,
     },
     feeContainer: {
         flexDirection: "row",
         alignItems: "center",
+        gap: 4,
     },
     feeText: {
-        fontSize: 16,
+        ...TYPOGRAPHY.label,
+        fontSize: 14,
         color: COLORS.primary,
-        marginLeft: 4,
-        fontWeight: "500",
     },
-    footerIconContainer: {
-        flexDirection: "row",
-        alignItems: "center",
+    actionsRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
     },
-    favoritIconText: {
-        fontSize: 11,
-        color: COLORS.textDark,
-        marginLeft: 4,
+    actionIcon: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 4,
     },
-    inputIcon: {
-        marginRight: 10,
-    },
-    input: {
-        flex: 1,
-        height: 48,
-        color: COLORS.textDark,
-    },
-    searchFieldInputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        flex: 1,
-        backgroundColor: COLORS.inputBackground,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-        paddingHorizontal: 12,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: COLORS.inputBackground,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-    },
-    formGroup: {
-        marginVertical: 10,
-        marginHorizontal: 20,
+    actionText: {
+        ...TYPOGRAPHY.bodySmall,
+        fontSize: 12,
+        color: COLORS.textLight,
     },
 });
 
 export const nearbyCardStyles = StyleSheet.create({
     container: {
-        backgroundColor: COLORS.background, marginHorizontal: 5 ,
-        width: cardWidthNearBy,
-        shadowColor: COLORS.shadow,
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 4,
+        width: width * 0.85,
+        height: 200,
+        marginHorizontal: 8,
+        borderRadius: 24,
         overflow: "hidden",
-    },
-    sectionTitle: {
-        fontSize: 12,
-        fontWeight: "800",
-        color: COLORS.text,
-        letterSpacing: -0.5,
-    },
-    nearbySectionHeader: {
-        marginBottom: 10,
-    },
-    scrollContainer: {
-        flexDirection: 'row',
-        width: width * 2
+        backgroundColor: COLORS.card,
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.15,
+        shadowRadius: 12,
+        elevation: 8,
     },
     imageContainer: {
-        position: "relative",
-        height: 50,
+        ...StyleSheet.absoluteFillObject,
     },
     image: {
         width: "100%",
         height: "100%",
-        backgroundColor: COLORS.border,
+    },
+    gradientOverlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: "rgba(0,0,0,0.4)", // Fallback if LinearGradient is not used correctly
+    },
+    cardContent: {
+        flex: 1,
+        justifyContent: 'space-between',
+        padding: 16,
+    },
+    categoryBadge: {
+        alignSelf: 'flex-start',
+        backgroundColor: COLORS.primary,
+        paddingHorizontal: 12,
+        paddingVertical: 6,
+        borderRadius: 20,
+    },
+    categoryText: {
+        ...TYPOGRAPHY.caption,
+        color: COLORS.white,
+        fontSize: 11,
+    },
+    bottomInfo: {
+        gap: 4,
+    },
+    metaRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 6,
+    },
+    authorName: {
+        ...TYPOGRAPHY.label,
+        color: COLORS.white,
+        fontSize: 13,
+    },
+    bullet: {
+        color: 'rgba(255,255,255,0.6)',
+        fontSize: 14,
+    },
+    timeText: {
+        ...TYPOGRAPHY.bodySmall,
+        color: 'rgba(255,255,255,0.8)',
+        fontSize: 12,
     },
     title: {
-        fontSize: 12,
-        color: COLORS.textDark,
+        ...TYPOGRAPHY.h3,
+        color: COLORS.white,
+        fontSize: 18,
+        lineHeight: 22,
     },
-    address: {
-        fontSize: 10,
-        color: COLORS.textSecondary,
+    sectionTitle: {
+        ...TYPOGRAPHY.h3,
+        color: COLORS.text,
+        marginBottom: 12,
+        marginLeft: 10,
     },
-    footer: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
+    nearbySectionHeader: {
+        marginTop: 16,
+        marginBottom: 8,
     },
-    inputIcon: {
-        marginRight: 10,
+    paginationContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 12,
+        gap: 6,
     },
-    input: {
-        flex: 1,
-        height: 48,
-        color: COLORS.textDark,
+    paginationDot: {
+        width: 6,
+        height: 6,
+        borderRadius: 3,
+        backgroundColor: '#E0E0E0',
     },
-    searchFieldInputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        flex: 1,
-        backgroundColor: COLORS.inputBackground,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-        paddingHorizontal: 12,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: COLORS.inputBackground,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-    },
-    formGroup: {
-        marginVertical: 10,
-        marginHorizontal: 20,
+    paginationDotActive: {
+        width: 18,
+        backgroundColor: COLORS.primary,
     },
 });
 

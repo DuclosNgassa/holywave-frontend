@@ -15,6 +15,7 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useNearbyPost } from '@/hooks/useNearbyPost';
 import { FlashList } from "@shopify/flash-list";
 import { ImageSize } from '../models/types';
+import { LinearGradient } from 'expo-linear-gradient';
 
 const HomeScreen = () => {
   useUserSync();
@@ -106,21 +107,19 @@ const HomeScreen = () => {
       {/** SEARCH SECTION */}
       <View style={styles.formGroup}>
         <View style={styles.inputContainer}>
-          <TouchableOpacity onPress={() => { }}
-            style={styles.searchFieldInputContainer} >
-            <Feather
-              name='search'
-              size={20}
-              color={COLORS.textSecondary}
-              style={styles.inputIcon} />
-            <TextInput
-              style={styles.input}
-              placeholder='Search an event'
-              placeholderTextColor={COLORS.placeholderText}
-              value={searchParam}
-              onChangeText={setSearchParam}
-            />
-          </TouchableOpacity>
+          <Feather
+            name='search'
+            size={20}
+            color={COLORS.textLight}
+            style={styles.inputIcon}
+          />
+          <TextInput
+            style={styles.input}
+            placeholder='Search an event'
+            placeholderTextColor="#A0A0A0"
+            value={searchParam}
+            onChangeText={setSearchParam}
+          />
         </View>
       </View>
       {/** CATEGORIES SECTION */}
@@ -146,7 +145,7 @@ const HomeScreen = () => {
         )}
 
         {/** Events section */}
-        <View style={styles.recipesSection}>
+        <View style={[styles.recipesSection, { paddingHorizontal: 4 }]}>
           <FlashList
             data={posts}
             renderItem={({ item }) => (
@@ -159,8 +158,8 @@ const HomeScreen = () => {
               />
             )}
             keyExtractor={(item) => item.id.toString()}
-            numColumns={2}
-            contentContainerStyle={styles.recipesGrid}
+            numColumns={1}
+            contentContainerStyle={[styles.recipesGrid, { paddingBottom: 100 }]}
             showsVerticalScrollIndicator={false}
             onEndReachedThreshold={0.3}
             onEndReached={() => {
@@ -191,6 +190,11 @@ const HomeScreen = () => {
                 />
               ) : null
             }
+          />
+          <LinearGradient
+            colors={['rgba(248, 249, 250, 0)', 'rgba(248, 249, 250, 0.8)', 'rgba(248, 249, 250, 1)']}
+            style={styles.listFadeOverlay}
+            pointerEvents="none"
           />
         </View>
       </View>

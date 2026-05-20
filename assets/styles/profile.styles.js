@@ -1,4 +1,5 @@
 import { COLORS } from "@/constants/colors";
+import { TYPOGRAPHY } from "@/constants/typography";
 import { StyleSheet } from "react-native";
 
 const styles = StyleSheet.create({
@@ -27,7 +28,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         padding: 16,
         marginBottom: 16,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
@@ -45,19 +46,19 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     username: {
-        fontSize: 20,
-        fontWeight: "700",
-        color: COLORS.textPrimary,
+        ...TYPOGRAPHY.h3,
+        color: COLORS.text,
         marginBottom: 4,
     },
     email: {
-        fontSize: 14,
-        color: COLORS.textSecondary,
+        ...TYPOGRAPHY.bodySmall,
+        color: COLORS.textLight,
         marginBottom: 4,
     },
     memberSince: {
-        fontSize: 12,
-        color: COLORS.textSecondary,
+        ...TYPOGRAPHY.caption,
+        fontSize: 10,
+        color: COLORS.textLight,
     },
     logoutButton: {
         backgroundColor: COLORS.white,
@@ -69,7 +70,7 @@ const styles = StyleSheet.create({
         width:50,
         marginVertical: 8,
         marginHorizontal: 8,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -77,7 +78,7 @@ const styles = StyleSheet.create({
     },
     logoutText: {
         color: COLORS.white,
-        fontWeight: "600",
+        ...TYPOGRAPHY.label,
         marginLeft: 8,
     },
     booksHeader: {
@@ -87,13 +88,13 @@ const styles = StyleSheet.create({
         marginBottom: 16,
     },
     booksTitle: {
+        ...TYPOGRAPHY.h3,
         fontSize: 18,
-        fontWeight: "700",
-        color: COLORS.textPrimary,
+        color: COLORS.text,
     },
     booksCount: {
-        fontSize: 14,
-        color: COLORS.textSecondary,
+        ...TYPOGRAPHY.bodySmall,
+        color: COLORS.textLight,
     },
     booksList: {
         paddingBottom: 20,
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         padding: 12,
         marginBottom: 12,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -123,9 +124,9 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
     },
     bookTitle: {
+        ...TYPOGRAPHY.label,
         fontSize: 16,
-        fontWeight: "600",
-        color: COLORS.textPrimary,
+        color: COLORS.text,
         marginBottom: 4,
     },
     ratingContainer: {
@@ -133,14 +134,15 @@ const styles = StyleSheet.create({
         marginBottom: 4,
     },
     bookCaption: {
-        fontSize: 14,
-        color: COLORS.textDark,
+        ...TYPOGRAPHY.bodySmall,
+        color: COLORS.text,
         marginBottom: 4,
         flex: 1,
     },
     bookDate: {
-        fontSize: 12,
-        color: COLORS.textSecondary,
+        ...TYPOGRAPHY.caption,
+        fontSize: 11,
+        color: COLORS.textLight,
     },
     deleteButton: {
         padding: 8,
@@ -153,9 +155,9 @@ const styles = StyleSheet.create({
         marginTop: 20,
     },
     emptyText: {
+        ...TYPOGRAPHY.h3,
         fontSize: 16,
-        fontWeight: "600",
-        color: COLORS.textPrimary,
+        color: COLORS.text,
         marginTop: 16,
         marginBottom: 20,
         textAlign: "center",
@@ -165,7 +167,7 @@ const styles = StyleSheet.create({
         borderRadius: 12,
         paddingVertical: 12,
         paddingHorizontal: 20,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -173,9 +175,10 @@ const styles = StyleSheet.create({
     },
     addButtonText: {
         color: COLORS.white,
-        fontWeight: "600",
-        fontSize: 14,
+        ...TYPOGRAPHY.label,
     },
 });
+
+export default styles;
 
 export default styles;

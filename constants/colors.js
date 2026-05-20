@@ -33,24 +33,22 @@ const coffeeTheme = {
 
 const forestTheme = {
   primary: "#3C9A92",
-  //"#2A7B9B", "#57C785"
-  background: "#E8F5E9",
-  text: "#1B5E20",
+  background: "#F8F9FA", // Softer off-white
+  text: "#1A1C1E",       // Rich Charcoal
+  textLight: "#6C757D",  // Neutral Grey
   border: "#3C9A92",
   white: "#FFFFFF",
-  textLight: "#3C9A92",
   card: "#FFFFFF",
-  shadow: "#000000",
-
-  black: "#000000",
-  red: "#ff0000",
+  shadow: "rgba(0,0,0,0.1)",
+  black: "#1A1C1E",
+  red: "#FF4757",
   slateGrey: "#708090",
-  textPrimary: "#2e5a2e",
+  textPrimary: "#1A1C1E",
   textSecondary: "#9FA29E",
-  textDark: "#1b361b",
-  placeholderText: "#767676",
-  cardBackground: "#f1f8f2",
-  inputBackground: "#f4faf5",
+  textDark: "#0A0B0C",
+  placeholderText: "#A0A0A0",
+  cardBackground: "#FFFFFF",
+  inputBackground: "#F4FAF5",
   favoritLiked: "#E0245E",
   favorit: "#657786",
 };

@@ -46,8 +46,8 @@ const ImagePickerView = ({
                     </View>
                 ) : (
                     <View style={styles.placeholderContainer}>
-                        <Feather name='image' size={40} color={COLORS.textSecondary} />
-                        <Text style={styles.placeholderText}>Tap to select an image</Text>
+                        <Feather name='image' size={40} color={COLORS.textLight} />
+                        <Text style={styles.placeholderText}>Tap to select an event banner</Text>
                     </View>
                 )}
             </TouchableOpacity>

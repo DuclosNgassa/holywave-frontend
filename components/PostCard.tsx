@@ -20,64 +20,70 @@ interface PostCardProps {
 const PostCard = ({ onLike, onSelectEvent, post, isLiked, imageSize }: PostCardProps) => {
 
     const newUri = getOptimizedImage(post.image, imageSize);
-    console.log("New Uri: ", newUri);
 
     return (
-        <View style={recipeCardStyles.container}
+        <TouchableOpacity
+            style={recipeCardStyles.container}
+            onPress={() => onSelectEvent(post.id)}
+            activeOpacity={0.8}
         >
-            <TouchableOpacity
-                onPress={() => onSelectEvent(post.id)}
-                activeOpacity={0.8}
-            >
-                {post.image && (<View style={recipeCardStyles.imageContainer}>
+            {post.image && (
+                <View style={recipeCardStyles.imageContainer}>
                     <Image
                         source={{ uri: newUri }}
                         style={recipeCardStyles.image}
                         contentFit="cover"
                         transition={300}
-                        recyclingKey={post.id}
-                        allowDownscaling={true}
                     />
-                </View>)}
-            </TouchableOpacity>
+                </View>
+            )}
 
             <View style={recipeCardStyles.content}>
-                {post.address && (
-                    <Text style={recipeCardStyles.address}>
-                        {post.address.city}-{post.address.state}-{post.address.country}
+                {post.categories && post.categories.length > 0 && (
+                    <Text style={recipeCardStyles.categoryText}>
+                        {post.categories[0].name}
                     </Text>
                 )}
+
                 <Text style={recipeCardStyles.title} numberOfLines={2}>
                     {post.title}
                 </Text>
 
+                <View style={recipeCardStyles.metaRow}>
+                    <Image
+                        source={{ uri: 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }} // Placeholder
+                        style={recipeCardStyles.authorAvatar}
+                    />
+                    <Text style={recipeCardStyles.authorName}>{post.author || 'HolyWave'}</Text>
+                    <Text style={recipeCardStyles.dot}>•</Text>
+                    <Text style={recipeCardStyles.dateText}>Feb 27, 2023</Text>
+                </View>
+
                 <View style={recipeCardStyles.footer}>
                     <View style={recipeCardStyles.feeContainer}>
-                        <Feather name="dollar-sign" size={14} color={COLORS.textLight} />
-                        <Text style={recipeCardStyles.feeText}>{post.fee ? post.fee : 'FREE'}</Text>
+                        <Text style={recipeCardStyles.feeText}>{post.fee ? `$${post.fee}` : 'FREE'}</Text>
                     </View>
-                    <View style={recipeCardStyles.feeContainer}>
-                        <TouchableOpacity onPress={() => onLike(post.id)}>
-                            <View style={recipeCardStyles.footerIconContainer}>
-                                {isLiked ? (
-                                    <AntDesign name="heart" size={18} color={COLORS.favoritLiked} />
-                                ) : (
-                                    <Feather name="heart" size={18} color={COLORS.favorit} />
-                                )}
-                                <Text style={recipeCardStyles.favoritIconText}>{formatNumber(post.numberOfLikes || 0)}</Text>
-                            </View>
+
+                    <View style={recipeCardStyles.actionsRow}>
+                        <TouchableOpacity onPress={() => onLike(post.id)} style={recipeCardStyles.actionIcon}>
+                            {isLiked ? (
+                                <AntDesign name="heart" size={16} color={COLORS.favoritLiked} />
+                            ) : (
+                                <Feather name="heart" size={16} color={COLORS.favorit} />
+                            )}
+                            <Text style={recipeCardStyles.actionText}>{formatNumber(post.numberOfLikes || 0)}</Text>
                         </TouchableOpacity>
-                        <View style={{ width: 10 }} />
+
                         <ShareButton
                             title={post.title}
                             message='Check out this awesome event'
                             url={post.image}
-                            style={recipeCardStyles.footerIconContainer}
+                            style={recipeCardStyles.actionIcon}
                         />
                     </View>
                 </View>
             </View>
-        </View>
+        </TouchableOpacity>
     );
 }
 

@@ -1,4 +1,6 @@
 import { StyleSheet } from "react-native";
+import { COLORS } from "@/constants/colors";
+import { TYPOGRAPHY } from "@/constants/typography";
 
 const styles = StyleSheet.create({
     container: {
@@ -11,7 +13,7 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.background,
         borderRadius: 16,
         padding: 24,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 8,
@@ -24,24 +26,21 @@ const styles = StyleSheet.create({
         marginBottom: 32,
     },
     title: {
-        fontSize: 32,
-        fontWeight: "700",
-        fontFamily: "JetBrainsMono-Medium",
+        ...TYPOGRAPHY.h1,
         color: COLORS.primary,
         marginBottom: 8,
     },
     subtitle: {
-        fontSize: 16,
-        color: COLORS.textSecondary,
+        ...TYPOGRAPHY.body,
+        color: COLORS.textLight,
         textAlign: "center",
     },
     formContainer: { marginBottom: 16 },
     inputGroup: { marginBottom: 20 },
     label: {
-        fontSize: 14,
+        ...TYPOGRAPHY.label,
         marginBottom: 8,
-        color: COLORS.textPrimary,
-        fontWeight: "500",
+        color: COLORS.text,
     },
     inputContainer: {
         flexDirection: "row",
@@ -56,7 +55,8 @@ const styles = StyleSheet.create({
     input: {
         flex: 1,
         height: 48,
-        color: COLORS.textDark,
+        ...TYPOGRAPHY.bodySmall,
+        color: COLORS.text,
     },
     eyeIcon: { padding: 8 },
     button: {
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         alignItems: "center",
         marginTop: 16,
-        shadowColor: COLORS.black,
+        shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 4,
@@ -74,8 +74,8 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: COLORS.white,
+        ...TYPOGRAPHY.label,
         fontSize: 16,
-        fontWeight: "600",
     },
     footer: {
         flexDirection: "row",
@@ -83,7 +83,8 @@ const styles = StyleSheet.create({
         marginTop: 24,
     },
     footerText: {
-        color: COLORS.textSecondary,
+        ...TYPOGRAPHY.bodySmall,
+        color: COLORS.textLight,
         marginRight: 5,
     },
     link: {

@@ -4,48 +4,73 @@ import { nearbyCardStyles } from "@/assets/styles/home.styles";
 import { ImageSize } from "@/app/models/types";
 import { getOptimizedImage } from "@/utils/helper";
 import { FlatList } from "react-native";
+import { LinearGradient } from "expo-linear-gradient";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { COLORS } from "@/constants/colors";
+import React, { useState } from "react";
 
+const { width } = Dimensions.get("window");
 
 const NearByEvent = ({ events, onSelectEvent, onSelectCategory }) => {
+    const [activeIndex, setActiveIndex] = useState(0);
+
+    const onScroll = (event) => {
+        const contentOffsetX = event.nativeEvent.contentOffset.x;
+        const index = Math.round(contentOffsetX / (width * 0.85 + 16));
+        if (index !== activeIndex) {
+            setActiveIndex(index);
+        }
+    };
 
     const renderNearbyItem = ({ item }) => (
+        <TouchableOpacity
+            style={nearbyCardStyles.container}
+            onPress={() => onSelectEvent(item.id)}
+            activeOpacity={0.9}
+            key={item.id}
+        >
+            {item.image && (
+                <View style={nearbyCardStyles.imageContainer}>
+                    <Image
+                        source={{ uri: getOptimizedImage(item.image, ImageSize.Medium) }}
+                        style={nearbyCardStyles.image}
+                        contentFit="cover"
+                        transition={300}
+                    />
+                </View>
+            )}
 
-        <View
-            style={[nearbyCardStyles.container, { minWidth: 80 }]}
-            key={item.id}>
-            <TouchableOpacity
-                onPress={() => onSelectEvent(item.id)}
-                activeOpacity={0.7}>
-                {item.image && (
-                    <View style={nearbyCardStyles.imageContainer}>
-                        <Image
-                            source={{ uri: getOptimizedImage(item.image, ImageSize.Small) }}
-                            style={nearbyCardStyles.image}
-                            contentFit="cover"
-                            transition={300}
-                            recyclingKey={item.id}
-                            allowDownscaling={true}
-                        />
-                    </View>
-                )}
+            <LinearGradient
+                colors={["transparent", "rgba(0,0,0,0.4)", "rgba(0,0,0,0.9)"]}
+                style={nearbyCardStyles.gradientOverlay}
+            />
 
-                {item.address && (
-                    <Text style={nearbyCardStyles.address}>
-                        {item.address.city}-{item.address.state}-{item.address.country}
+            <View style={nearbyCardStyles.cardContent}>
+                <View style={nearbyCardStyles.categoryBadge}>
+                    <Text style={nearbyCardStyles.categoryText}>
+                        {item.categories && item.categories.length > 0 ? item.categories[0].name : "Event"}
                     </Text>
-                )}
-                <Text style={nearbyCardStyles.title} numberOfLines={1}>
-                    {item.title}
-                </Text>
+                </View>
 
-            </TouchableOpacity>
-        </View>
+                <View style={nearbyCardStyles.bottomInfo}>
+                    <View style={nearbyCardStyles.metaRow}>
+                        <Text style={nearbyCardStyles.authorName}>{item.author || "HolyWave"}</Text>
+                        <MaterialCommunityIcons name="check-circle" size={14} color="#1DA1F2" />
+                        <Text style={nearbyCardStyles.bullet}>•</Text>
+                        <Text style={nearbyCardStyles.timeText}>Trending</Text>
+                    </View>
+                    <Text style={nearbyCardStyles.title} numberOfLines={2}>
+                        {item.title}
+                    </Text>
+                </View>
+            </View>
+        </TouchableOpacity>
     );
 
     return (
-        <View>
+        <View style={{ marginBottom: 20 }}>
             <View style={nearbyCardStyles.nearbySectionHeader}>
-                <Text style={nearbyCardStyles.sectionTitle}>Near by events</Text>
+                <Text style={nearbyCardStyles.sectionTitle}>Nearby Events</Text>
             </View>
 
             <FlatList
@@ -54,12 +79,24 @@ const NearByEvent = ({ events, onSelectEvent, onSelectCategory }) => {
                 renderItem={renderNearbyItem}
                 keyExtractor={(item) => item.id.toString()}
                 showsHorizontalScrollIndicator={false}
-                removeClippedSubviews
-                initialNumToRender={5}
-                maxToRenderPerBatch={5}
-                windowSize={5}
+                snapToInterval={width * 0.85 + 16}
+                decelerationRate="fast"
+                onScroll={onScroll}
+                scrollEventThrottle={16}
+                contentContainerStyle={{ paddingHorizontal: 8 }}
             />
 
+            <View style={nearbyCardStyles.paginationContainer}>
+                {events.slice(0, 5).map((_, index) => (
+                    <View
+                        key={index}
+                        style={[
+                            nearbyCardStyles.paginationDot,
+                            index === activeIndex % 5 && nearbyCardStyles.paginationDotActive
+                        ]}
+                    />
+                ))}
+            </View>
         </View>
     );
 }

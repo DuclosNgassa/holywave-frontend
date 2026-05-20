@@ -102,8 +102,8 @@ const EventDateList = forwardRef<EventDateListRef, EventDateListProps>(({ eventD
           >
             <Feather
               name='calendar'
-              size={20}
-              color={COLORS.textSecondary}
+              size={18}
+              color={COLORS.textLight}
               style={styles.inputIcon} />
             <Text style={styles.checkboxLabel}>{eventDate.toLocaleDateString()}</Text>
           </TouchableOpacity>
@@ -111,8 +111,8 @@ const EventDateList = forwardRef<EventDateListRef, EventDateListProps>(({ eventD
             onPress={openTimePicker}>
             <Feather
               name='clock'
-              size={20}
-              color={COLORS.textSecondary}
+              size={18}
+              color={COLORS.textLight}
               style={styles.inputIcon} />
             <Text style={styles.checkboxLabel}>{formatHour(eventDate)}</Text>
           </TouchableOpacity>
@@ -123,7 +123,7 @@ const EventDateList = forwardRef<EventDateListRef, EventDateListProps>(({ eventD
           >
             <Feather
               name='plus-circle'
-              size={20}
+              size={22}
               color={COLORS.white} />
           </TouchableOpacity>
         </View>

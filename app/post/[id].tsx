@@ -6,9 +6,9 @@ import LoadingSpinner from '@/components/LoadingSpinner';
 import styles from '@/assets/styles/detail.styles';
 import { Image } from 'expo-image';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AntDesign, Feather, FontAwesome6, Ionicons } from '@expo/vector-icons';
+import { Feather, FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { COLORS } from '@/constants/colors';
-import { formatNumber, formattedFrequency, formattedLocation, sortAscAndFormatDates } from '@/utils/formatters';
+import { formattedFrequency, formattedLocation, sortAscAndFormatDates } from '@/utils/formatters';
 import { useFocusEffect } from '@react-navigation/native';
 import { usePost } from '@/hooks/usePost';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
@@ -68,217 +68,169 @@ const PostDetailScreen = () => {
         <View style={styles.container}>
             <ScrollView
                 showsVerticalScrollIndicator={false}
+                bounces={false}
             >
-                <View>
-                    {/**HEADER */}
+                <View style={styles.headerContainer}>
+                    <TouchableOpacity
+                        activeOpacity={0.95}
+                        onPress={openImageModal}
+                        style={styles.imageTapArea}
+                    >
+                        <Image
+                            source={{ uri: getOptimizedImage(post.image, ImageSize.Small) }}
+                            style={styles.headerImage}
+                            contentFit='cover'
+                        />
+                    </TouchableOpacity>
 
-                    {/** TODO  Check if post has image otherwise display default image */}
-                    <View style={styles.headerContainer}>
-                        <TouchableOpacity
-                            activeOpacity={0.95}
-                            onPress={openImageModal}
-                            style={styles.imageTapArea}
-                            accessibilityRole='imagebutton'
-                            accessibilityLabel='Open event image'
-                        >
-                            <Image
-                                source={{ uri: getOptimizedImage(post.image, ImageSize.Small) }}
-                                style={styles.headerImage}
-                                contentFit='cover'
-                            />
-                        </TouchableOpacity>
-                    </View>
                     <LinearGradient
-                        colors={["transparent", "rgba(0,0,0,0.5)", "rgba(0,0,0,0.9)"]}
+                        colors={["transparent", "rgba(0,0,0,0.4)", "rgba(0,0,0,0.8)"]}
                         style={styles.gradientOverlay}
                         pointerEvents='none'
                     />
+
                     <View style={styles.floatingButtons}>
                         <TouchableOpacity
                             style={styles.floatingButton}
                             onPress={() => router.back()}
                         >
-                            <Feather
-                                name='arrow-left' size={24} color={COLORS.white}
-                            />
+                            <Feather name='arrow-left' size={24} color={COLORS.white} />
                         </TouchableOpacity>
-                        {/** Only the ownner of the post can modify it */}
-                        {userId === post.userId &&
+
+                        <View style={styles.rightButtons}>
+                            {userId === post.userId &&
+                                <TouchableOpacity
+                                    style={[styles.floatingButton, { backgroundColor: isSaving ? COLORS.slateGrey : "rgba(0,0,0,0.3)" }]}
+                                    onPress={() => router.push(`/post/edit/${post.id}`)}
+                                >
+                                    <FontAwesome6
+                                        name={isSaving ? 'hourglass-half' : 'pencil'} size={18} color={COLORS.white}
+                                    />
+                                </TouchableOpacity>
+                            }
                             <TouchableOpacity
-                                style={[styles.floatingButton, { backgroundColor: isSaving ? COLORS.slateGrey : COLORS.primary }]}
-                                onPress={() => router.push(`/post/edit/${post.id}`)}
+                                style={styles.floatingButton}
+                                onPress={() => postId && toggleBookmark(postId)}
                             >
                                 <FontAwesome6
-                                    name={isSaving ? 'hourglass-half' : 'pencil'} size={20} color={COLORS.white}
+                                    name="bookmark"
+                                    solid={post.bookmarked}
+                                    size={18}
+                                    color={post.bookmarked ? COLORS.favoritLiked : COLORS.white}
                                 />
                             </TouchableOpacity>
-                        }
-                    </View>
-                    {/**TITLE SECTION */}
-                    <View style={styles.titleSection}>
-                        {post.categories.length > 0 &&
-                            <View style={styles.categoryBadge}>
-                                <Text style={styles.categoryText}>{post.categories.map((category: any) => category.name).join(' - ')}</Text>
-                            </View>
-                        }
-                        <View style={styles.titleSubSection}>
-                            <View style={styles.titleSubSectionContentLeft}>
-                                <Text style={styles.recipeTitle}>{post.title}</Text>
-                            </View>
-                            <View style={styles.titleSubSectionContentRight}>
-                                <View>
-                                    <TouchableOpacity onPress={() => postId && toggleBookmark(postId)}>
-                                        <LinearGradient
-                                            colors={["#2A7B9B", "#57C785"]}
-                                            style={styles.statIconContainer}
-                                        >
-                                            {post.bookmarked ? (
-                                                <FontAwesome6 name="bookmark" solid size={18} color={COLORS.favoritLiked} />
-                                            ) : (
-                                                <FontAwesome6 name="bookmark" regular size={18} color={COLORS.white} />
-                                            )}
-                                        </LinearGradient>
-                                    </TouchableOpacity>
-                                </View>
-                                <View>
-                                    <TouchableOpacity style={{ marginLeft: 8 }} onPress={() => postId && toggleLike(postId)}>
-                                        <LinearGradient
-                                            colors={["#2A7B9B", "#57C785"]}
-                                            style={styles.statIconContainer}
-                                        >
-                                            {post.liked ? (
-                                                <AntDesign name="heart" size={18} color={COLORS.favoritLiked} />
-                                            ) : (
-                                                <Feather name="heart" size={18} color={COLORS.favorit} />
-                                            )}
-                                            <Text style={[styles.statValue, { color: COLORS.white, paddingLeft: 5 }]}>{formatNumber(post.numberOfLikes)}</Text>
-                                        </LinearGradient>
-                                    </TouchableOpacity>
-                                </View>
-                                <View>
-                                    <View style={{ marginLeft: 8 }}>
-                                        <LinearGradient
-                                            colors={["#2A7B9B", "#57C785"]}
-                                            style={styles.statIconContainer}
-                                        >
-                                            <ShareButton
-                                                title={post.title}
-                                                message='Check out this awesome event'
-                                                url={post.image}
-                                                style={styles.shareButton}
-                                            />
-                                        </LinearGradient>
-                                    </View>
-                                </View>
-                            </View>
                         </View>
+                    </View>
+
+                    <View style={styles.titleSection}>
+                        {post.categories && post.categories.length > 0 &&
+                            <View style={styles.categoryBadge}>
+                                <Text style={styles.categoryText}>
+                                    {post.categories.map((category: any) => category.name).join(' - ')}
+                                </Text>
+                            </View>
+                        }
+                        <Text style={styles.postTitle}>{post.title}</Text>
+                        <Text style={styles.metaText}>Trending • 6 hours ago</Text>
                     </View>
                 </View>
-                {/** CONTENT SECTION */}
+
                 <View style={styles.contentSection}>
-                    <View style={styles.instructionsContainer}>
-                        <View style={styles.instructionsTitle}>
-                            <View style={styles.locationRow}>
-                                {post.location &&
-                                    <View style={styles.categoryBadge}>
-                                        <Text style={styles.locationText}>
-                                            {formattedLocation(post.location)}
-                                        </Text>
-                                    </View>
-                                }
-                                <View style={styles.categoryBadge}><Text style={styles.locationText}>{post.fee ? '$' + post.fee : 'FREE'}</Text></View>
+                    {post.description && (
+                        <Text style={styles.description}>{post.description}</Text>
+                    )}
+
+                    {/** EXTRA DETAILS */}
+                    {post.location && (
+                        <View style={styles.infoCard}>
+                            <View style={styles.infoIconContainer}>
+                                <FontAwesome6 name='location-dot' size={18} color={COLORS.white} />
+                            </View>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.infoLabel}>Location</Text>
+                                <Text style={styles.infoValue}>{formattedLocation(post.location)}</Text>
                             </View>
                         </View>
-                        <View style={styles.instructionCard}>
-                            <LinearGradient
-                                colors={[COLORS.primary, COLORS.primary + "CC"]}
-                                style={styles.stepIndicator}
-                            >
+                    )}
+
+                    {post.frequency && (
+                        <View style={styles.infoCard}>
+                            <View style={styles.infoIconContainer}>
                                 <Ionicons name="repeat" size={20} color={COLORS.white} />
-                            </LinearGradient>
-                            <View style={{ justifyContent: 'center', alignItems: 'center', marginBottom: 0 }}>
-                                {!post.frequency.daily && !post.frequency.weekly && !post.frequency.monthly && !post.frequency.yaerly ?
-                                    (<Text style={[styles.instructionTextAddress, { justifyContent: 'center' }]}>Once</Text>) :
-                                    (<Text style={styles.instructionTextAddress}>{formattedFrequency(post.frequency)}</Text>)
+                            </View>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.infoLabel}>Frequency</Text>
+                                <Text style={styles.infoValue}>
+                                    {!post.frequency.daily && !post.frequency.weekly && !post.frequency.monthly && !post.frequency.yearly ?
+                                        'Once' : formattedFrequency(post.frequency)
+                                    }
+                                </Text>
+                            </View>
+                        </View>
+                    )}
+
+                    {post.eventDates?.length > 0 && (
+                        <View style={styles.infoCard}>
+                            <View style={styles.infoIconContainer}>
+                                <FontAwesome6 name='calendar' size={18} color={COLORS.white} />
+                            </View>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.infoLabel}>Dates</Text>
+                                {sortAscAndFormatDates(post.eventDates).filter((item) => item !== undefined).map((item, index) => (
+                                    <Text key={index} style={styles.infoValue}>{item.date} - {item.time} </Text>))
                                 }
                             </View>
                         </View>
-                        {post.eventDates?.length > 0 &&
-                            <View style={styles.instructionCard}>
-                                <LinearGradient
-                                    colors={[COLORS.primary, COLORS.primary + "CC"]}
-                                    style={styles.stepIndicator}
-                                >
-                                    <FontAwesome6 name='calendar' size={20} color={COLORS.white} />
-                                </LinearGradient>
-                                <View style={styles.instructionContent}>
-                                    {sortAscAndFormatDates(post.eventDates).filter((item) => item !== undefined).map((item, index) => (
-                                        <Text key={index} style={styles.instructionTextAddress}>{item.date} - {item.time} </Text>))
-                                    }
-                                </View>
-                            </View>
-                        }
-                        {post.address &&
-                            <TouchableOpacity>
-                                <View style={styles.instructionCard}>
-                                    <LinearGradient
-                                        colors={[COLORS.primary, COLORS.primary + "CC"]}
-                                        style={styles.stepIndicator}
-                                    >
-                                        <FontAwesome6 name='location-dot' size={20} color={COLORS.white} />
-                                    </LinearGradient>
-                                    <View style={styles.instructionContent}>
-                                        <Text style={styles.instructionTextAddress}>{post.address.street} {post.address.houseNumber}</Text>
-                                        <Text style={styles.instructionTextAddress}>{post.address.zipCode} {post.address.city}</Text>
-                                        <Text style={styles.instructionTextAddress}>{post.address.state} {post.address.country}</Text>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        }
-                        {post.description &&
-                            <View style={styles.instructionCard}>
-                                <LinearGradient
-                                    colors={[COLORS.primary, COLORS.primary + "CC"]}
-                                    style={styles.stepIndicator}
-                                >
-                                    <FontAwesome6 name='align-justify' size={20} color={COLORS.white} />
-                                </LinearGradient>
-                                <View style={styles.instructionContent}>
-                                    <Text style={styles.instructionText}>{post.description}</Text>
-                                </View>
-                            </View>
-                        }
-                        {(post.phone || post.email) && (
-                            <View style={styles.instructionCard}>
-                                <LinearGradient
-                                    colors={[COLORS.primary, COLORS.primary + "CC"]}
-                                    style={styles.stepIndicator}
-                                >
-                                    <FontAwesome6 name='address-book' size={20} color={COLORS.white} />
-                                </LinearGradient>
-                                <View style={styles.instructionContent}>
-                                    {post.phone && <Text style={styles.instructionTextAddress}>{post.phone}</Text>}
-                                    {post.email && <Text style={styles.instructionTextAddress}>{post.email}</Text>}
-                                </View>
-                            </View>
-                        )}
+                    )}
 
-                        {(post.link) && (
-                            <View style={styles.instructionCard}>
-                                <LinearGradient
-                                    colors={[COLORS.primary, COLORS.primary + "CC"]}
-                                    style={styles.stepIndicator}
-                                >
-                                    <FontAwesome6 name='link' size={20} color={COLORS.white} />
-                                </LinearGradient>
-                                <View style={styles.instructionContent}>
-                                    <Text style={styles.instructionTextAddress}>For online participation</Text>
-                                    {post.link && <Text style={styles.instructionTextAddress}>{post.link}</Text>}
-                                </View>
+                    {post.address && (
+                        <View style={styles.infoCard}>
+                            <View style={styles.infoIconContainer}>
+                                <FontAwesome6 name='map' size={18} color={COLORS.white} />
                             </View>
-                        )}
+                            <View style={styles.infoContent}>
+                                <Text style={styles.infoLabel}>Address</Text>
+                                <Text style={styles.infoValue}>{post.address.street} {post.address.houseNumber}, {post.address.city}, {post.address.state} {post.address.country}</Text>
+                            </View>
+                        </View>
+                    )}
 
-                    </View>
+                    {post.fee !== undefined && (
+                        <View style={styles.infoCard}>
+                            <View style={styles.infoIconContainer}>
+                                <FontAwesome6 name='dollar-sign' size={18} color={COLORS.white} />
+                            </View>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.infoLabel}>Admission Fee</Text>
+                                <Text style={styles.infoValue}>{post.fee ? `$${post.fee}` : 'FREE'}</Text>
+                            </View>
+                        </View>
+                    )}
+
+                    {(post.phone || post.email) && (
+                        <View style={styles.infoCard}>
+                            <View style={styles.infoIconContainer}>
+                                <FontAwesome6 name='address-book' size={18} color={COLORS.white} />
+                            </View>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.infoLabel}>Contact</Text>
+                                {post.phone && <Text style={styles.infoValue}>{post.phone}</Text>}
+                                {post.email && <Text style={styles.infoValue}>{post.email}</Text>}
+                            </View>
+                        </View>
+                    )}
+
+                    {post.link && (
+                        <View style={styles.infoCard}>
+                            <View style={styles.infoIconContainer}>
+                                <FontAwesome6 name='link' size={18} color={COLORS.white} />
+                            </View>
+                            <View style={styles.infoContent}>
+                                <Text style={styles.infoLabel}>Online Link</Text>
+                                <Text style={styles.infoValue}>{post.link}</Text>
+                            </View>
+                        </View>
+                    )}
                 </View>
             </ScrollView>
             <ImageModalViewer
