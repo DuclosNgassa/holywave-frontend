@@ -117,6 +117,7 @@ const PostScreen = () => {
               styleItemsContainer={styles.inputContainer3}
               styleMainWrapper={styles.multiSelectContainer}
               styleListContainer={{ maxHeight: 200 }}
+              flatListProps={{ scrollEnabled: false }}
               hideDropdown={true}
             />
           </View>

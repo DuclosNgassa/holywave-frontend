@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity } from 'react-native'
 import React from 'react'
 import { COLORS } from '@/constants/colors'
-import { recipeCardStyles } from "../assets/styles/home.styles";
+import { recipeCardStyles } from "@/assets/styles/home.styles";
 import { AntDesign, Feather } from '@expo/vector-icons';
 import { Image } from "expo-image";
 import { formatNumber } from '@/utils/formatters';
@@ -76,7 +76,7 @@ const PostCard = ({ onLike, onSelectEvent, post, isLiked, imageSize }: PostCardP
 
                         <ShareButton
                             title={post.title}
-                            message='Check out this awesome event'
+                            text='Check out this awesome event'
                             url={post.image}
                             style={recipeCardStyles.actionIcon}
                         />

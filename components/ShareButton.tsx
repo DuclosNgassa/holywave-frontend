@@ -1,58 +1,87 @@
-import { Alert, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native'
+import { Alert, StyleProp, TouchableOpacity, View, ViewStyle, Share as RNShare } from 'react-native'
 import React from 'react'
 import { Feather } from '@expo/vector-icons'
 import { COLORS } from '@/constants/colors';
+import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
-// Import the legacy API to avoid SDK 54+ deprecation crash
-import * as FileSystem from 'expo-file-system/legacy';
 
 interface ShareButtonProps {
     title: string;
-    message: string;
-    url: string;
+    text?: string;
+    message?: string;
+    url: string; // Remote image URL
     style?: StyleProp<ViewStyle>;
 }
 
+const getSafeFilename = (title: string) => {
+    const safeTitle = title.replace(/[^a-z0-9]/gi, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+    return `${safeTitle || 'post-image'}.jpg`;
+};
+
 const ShareButton = ({
     title,
-    message, // Text to share
-    url,        // Image URI (can be remote or local file path)
+    text,
+    message,
+    url,
     style,
 }: ShareButtonProps) => {
 
-    const shareImageAndText = async () => {
+    const shareEvent = async () => {
         try {
-            const localUri = FileSystem.documentDirectory + title + '.jpg';
+            const shareText = text ?? message ?? `Check out this awesome event: ${title}`;
+            
+            // Step 1: Check if sharing is available on the device
+            const isAvailable = await Sharing.isAvailableAsync();
 
-            // Step 1: Download image to local storage
-            await FileSystem.downloadAsync(url, localUri);
-
-            // Step 2: Check if sharing is available
-            const available = await Sharing.isAvailableAsync();
-            if (!available) {
-                Alert.alert('Sharing not available', 'This device does not support sharing.');
+            if (!isAvailable) {
+                // Fallback to basic text sharing if file sharing isn't available
+                await RNShare.share({
+                    title,
+                    message: `${shareText}\n\n${url}`,
+                });
                 return;
             }
 
-            // Step 3: Share the image
-            await Sharing.shareAsync(localUri, {
-                dialogTitle: message,
+            // Step 2: Download the image to a local temporary file
+            const localUri = `${FileSystem.cacheDirectory}${getSafeFilename(title)}`;
+            
+            // Check if file already exists to avoid redundant downloads
+            const fileInfo = await FileSystem.getInfoAsync(localUri);
+            let finalUri = localUri;
+
+            if (!fileInfo.exists) {
+                const downloadedImage = await FileSystem.downloadAsync(url, localUri);
+                finalUri = downloadedImage.uri;
+            }
+
+            // Step 3: Share the local file using Expo Sharing
+            // Note: Most apps will accept the text content alongside the file
+            await Sharing.shareAsync(finalUri, {
+                dialogTitle: title,
                 mimeType: 'image/jpeg',
+                UTI: 'public.jpeg', // for iOS
             });
 
         } catch (error) {
             console.error('Error sharing:', error);
-            Alert.alert('Error', 'Something went wrong while sharing.');
+            // Final fallback: Basic text share
+            try {
+                await RNShare.share({
+                    message: `${title}\n${url}`,
+                });
+            } catch (innerError) {
+                Alert.alert('Error', 'Unable to share this event.');
+            }
         }
     };
 
     return (
-        <TouchableOpacity onPress={shareImageAndText}>
+        <TouchableOpacity onPress={shareEvent}>
             <View style={style}>
-                <Feather name="share-2" size={18} color={COLORS.white} />
+                <Feather name="share-2" size={18} color={COLORS.primary} />
             </View>
         </TouchableOpacity>
     )
 }
 
-export default ShareButton
+export default ShareButton;

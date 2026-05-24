@@ -47,7 +47,7 @@ const BookmarkCard: React.FC<BookmarkProps> = ({ post, onBookmark, showDetail })
                             <View>
                                 <ShareButton
                                     title={post.title}
-                                    message='Check out this awesome event'
+                                    text='Check out this awesome event'
                                     url={post.image}
                                     style={styles.shareButton}
                                 />

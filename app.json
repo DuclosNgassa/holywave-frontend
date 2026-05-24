@@ -11,7 +11,17 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.duclos.holywave",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "LSApplicationQueriesSchemes": [
+          "discord",
+          "fb",
+          "fb-messenger",
+          "instagram",
+          "tg",
+          "twitter",
+          "viber",
+          "whatsapp"
+        ]
       }
     },
     "android": {
