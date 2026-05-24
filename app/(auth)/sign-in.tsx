@@ -1,65 +1,85 @@
-import { View, Text, Image, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { View, Text, Image, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native'
 import React from 'react'
 import styles from "../../assets/styles/login.styles"
 import { useSocialAuth } from '@/hooks/useSocialAuth';
 import { COLORS } from '@/constants/colors.js';
 
 const SignIn = () => {
-
   const { handleSocialAuth, isLoading } = useSocialAuth();
 
   return (
-    <View style={{ flex: 1, backgroundColor: COLORS.white }}>
-      <View style={{ justifyContent: 'space-between', flex: 1, paddingLeft: 24, paddingRight: 24 }}>
-        <View style={styles.container}>
-          <View style={styles.topIllustration}>
-            <Image source={require("../../assets/images/auth1.png")}
-              style={styles.illustrationImage}
-              resizeMode='contain' />
+    <View style={styles.container}>
+      <StatusBar barStyle="dark-content" />
+      
+      {/* Top Illustration Section */}
+      <View style={styles.topSection}>
+        <Image 
+          source={require("../../assets/images/holywave-start-screen.png")}
+          style={styles.illustrationImage}
+          resizeMode='contain' 
+        />
+      </View>
+
+      {/* Content Section with Rounded Card */}
+      <View style={styles.contentSection}>
+        <View>
+          <View style={styles.header}>
+            <Text style={styles.title}>Welcome to HolyWave</Text>
+            <Text style={styles.subtitle}>Discover and share inspiring events within your community</Text>
           </View>
-          <View style={styles.formLogin}>
+
+          <View style={styles.buttonContainer}>
+            {/* Google Sign In */}
             <TouchableOpacity
-              style={styles.buttonLogin}
+              style={styles.socialButton}
               onPress={() => handleSocialAuth("oauth_google")}
-              disabled={isLoading}>
+              disabled={isLoading}
+              activeOpacity={0.8}
+            >
               {isLoading ? (
-                <ActivityIndicator color={COLORS.black} />
+                <ActivityIndicator color={COLORS.primary} />
               ) : (
-                <View style={styles.buttonLoginContent}>
-                  <Image source={require("../../assets/images/google.png")}
-                    style={styles.buttonLoginIcon}
+                <View style={styles.socialButtonContent}>
+                  <Image 
+                    source={require("../../assets/images/google.png")}
+                    style={styles.socialIcon}
                     resizeMode='contain'
                   />
-                  <Text>Sign in with google</Text>
+                  <Text style={styles.socialButtonText}>Continue with Google</Text>
                 </View>
               )}
             </TouchableOpacity>
+
+            {/* Apple Sign In */}
             <TouchableOpacity
-              style={styles.buttonLogin}
+              style={styles.socialButton}
               onPress={() => handleSocialAuth("oauth_apple")}
-              disabled={isLoading}>
+              disabled={isLoading}
+              activeOpacity={0.8}
+            >
               {isLoading ? (
-                <ActivityIndicator color={COLORS.black} />
+                <ActivityIndicator color={COLORS.primary} />
               ) : (
-                <View style={styles.buttonLoginContent}>
-                  <Image source={require("../../assets/images/apple.png")}
-                    style={styles.buttonLoginIconApple}
+                <View style={styles.socialButtonContent}>
+                  <Image 
+                    source={require("../../assets/images/apple.png")}
+                    style={styles.socialIcon}
                     resizeMode='contain'
                   />
-                  <Text>Sign in with apple</Text>
+                  <Text style={styles.socialButtonText}>Continue with Apple</Text>
                 </View>
               )}
             </TouchableOpacity>
           </View>
-          <Text style={styles.footerText}>
-            By signing up, you agree to our{" "}
-            <Text style={styles.link}>Terms</Text>
-            {", "}
-            <Text style={styles.link}>Privacy Policy</Text>
-            {", and "}
-            <Text style={styles.link}>Cookie Use</Text>.
-          </Text>
         </View>
+
+        {/* Footer Legal Info */}
+        <Text style={styles.footerText}>
+          By continuing, you agree to our{" "}
+          <Text style={styles.link}>Terms of Service</Text>
+          {" and "}
+          <Text style={styles.link}>Privacy Policy</Text>.
+        </Text>
       </View>
     </View>
   )

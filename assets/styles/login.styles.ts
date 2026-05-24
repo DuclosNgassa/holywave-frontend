@@ -2,159 +2,96 @@ import { COLORS } from "@/constants/colors";
 import { TYPOGRAPHY } from "@/constants/typography";
 import { StyleSheet, Dimensions, type TextStyle } from "react-native";
 
-const { width } = Dimensions.get("window");
+const { width, height } = Dimensions.get("window");
 
 const styles = StyleSheet.create({
     container: {
-        /*         flexGrow: 1,
-                backgroundColor: COLORS.background,
-                padding: 20,
-                justifyContent: "center",
-         */
         flex: 1,
-        justifyContent: 'center'
+        backgroundColor: COLORS.white,
     },
-    scrollViewStyle: {
-        flex: 1,
-        backgroundColor: COLORS.background,
-    },
-    topIllustration: {
-        alignItems: "center",
+    topSection: {
+        height: height * 0.45,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: COLORS.background, // Soft off-white
     },
     illustrationImage: {
-        width: width * 0.85,
-        height: width * 0.95,
+        width: width * 0.8,
+        height: width * 0.8,
     },
-    card: {
-        backgroundColor: COLORS.cardBackground,
-        borderRadius: 16,
-        padding: 24,
-        shadowColor: COLORS.shadow,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-        elevation: 4,
-        borderWidth: 2,
-        borderColor: COLORS.border,
-        marginTop: 12,
+    contentSection: {
+        flex: 1,
+        backgroundColor: COLORS.white,
+        borderTopLeftRadius: 40,
+        borderTopRightRadius: 40,
+        marginTop: -40,
+        paddingHorizontal: 24,
+        paddingTop: 40,
+        justifyContent: 'space-between',
+        paddingBottom: 40,
     },
     header: {
-        alignItems: "center",
-        marginBottom: 24,
+        marginBottom: 32,
     },
     title: {
         ...(TYPOGRAPHY.h1 as TextStyle),
         color: COLORS.text,
+        fontSize: 32,
+        textAlign: 'center',
         marginBottom: 8,
     },
     subtitle: {
         ...(TYPOGRAPHY.body as TextStyle),
         color: COLORS.textLight,
         textAlign: "center",
+        fontSize: 16,
+        lineHeight: 24,
     },
-    formContainer: {
-        marginBottom: 16,
+    buttonContainer: {
+        gap: 16,
     },
-    formLogin: {
-        flexDirection: 'column',
-        gap: 8
-    },
-    inputGroup: {
-        marginBottom: 20,
-    },
-    label: {
-        ...(TYPOGRAPHY.label as TextStyle),
-        marginBottom: 8,
-        color: COLORS.text,
-    },
-    inputContainer: {
-        flexDirection: "row",
-        alignItems: "center",
-        backgroundColor: COLORS.inputBackground,
-        borderRadius: 12,
-        borderWidth: 1,
-        borderColor: COLORS.border,
-        paddingHorizontal: 12,
-    },
-    inputIcon: {
-        marginRight: 10,
-    },
-    input: {
-        flex: 1,
-        height: 48,
-        ...(TYPOGRAPHY.bodySmall as TextStyle),
-        color: COLORS.text,
-    },
-    eyeIcon: {
-        padding: 8,
-    },
-    button: {
-        backgroundColor: COLORS.primary,
-        borderRadius: 12,
-        height: 50,
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: 16,
-        shadowColor: COLORS.shadow,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    buttonLogin: {
+    socialButton: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: COLORS.white,
-        borderColor: COLORS.border,
-        borderRadius: 9999,
-        paddingVertical: 12,
-        paddingHorizontal: 24,
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
+        borderRadius: 20,
+        height: 64,
+        borderWidth: 1.5,
+        borderColor: "#F1F3F5",
+        shadowColor: "rgba(0,0,0,0.05)",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 1,
+        shadowRadius: 12,
         elevation: 2,
-        borderWidth: 0.5,
     },
-    buttonLoginContent: {
+    socialButtonContent: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'center',
+        gap: 12,
     },
-    buttonLoginIcon: {
-        marginRight: 12,
-        width: 40,
-        height: 40,
+    socialIcon: {
+        width: 24,
+        height: 24,
     },
-    buttonLoginIconApple: {
-        marginRight: 12,
-        width: 30,
-        height: 30,
-    },
-    buttonText: {
-        color: COLORS.white,
+    socialButtonText: {
         ...(TYPOGRAPHY.label as TextStyle),
         fontSize: 16,
-    },
-    footer: {
-        flexDirection: "row",
-        justifyContent: "center",
-        marginTop: 24,
+        color: COLORS.text,
+        fontWeight: '700',
     },
     footerText: {
         ...(TYPOGRAPHY.caption as TextStyle),
         color: COLORS.textLight,
         textAlign: "center",
         fontSize: 12,
-        lineHeight: 16,
-        marginTop: 24,
-        paddingHorizontal: 8,
+        lineHeight: 18,
+        paddingHorizontal: 16,
         textTransform: 'none',
     },
     link: {
         color: COLORS.primary,
-        fontWeight: "600",
+        fontWeight: "700",
     },
 });
 
