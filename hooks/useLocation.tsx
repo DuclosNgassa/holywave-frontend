@@ -25,8 +25,9 @@ const useLocation = () => {
                 setUserGeocodedAddress(geocodedAddress);
             }
         } catch (error) {
-            console.warn('Could not reverse geocode current location:', error);
-            setErrorMsg('We found your location, but could not resolve your address.');
+            // Silently warn for geocoding errors - location coordinates are still valid
+            console.warn('Location found, but reverse geocoding failed.', error);
+            setErrorMsg('Location found, but address could not be resolved.');
         }
     }, []);
 
@@ -37,51 +38,61 @@ const useLocation = () => {
         setErrorMsg("");
 
         try {
-            // 1. Check if location services are enabled
+            // 1. Pre-checks: Services and Permissions
             const isLocationEnabled = await Location.hasServicesEnabledAsync();
             if (!isLocationEnabled) {
-                setErrorMsg("Location services are disabled on your device.");
+                setErrorMsg("Location services are disabled.");
                 setIsLoading(false);
                 return;
             }
 
-            // 2. Request permissions
             const { status } = await Location.requestForegroundPermissionsAsync();
             if (status !== 'granted') {
-                setErrorMsg('Permission to access location was denied.');
+                setErrorMsg('Location permission denied.');
                 setIsLoading(false);
                 return;
             }
 
-            // 3. Try to get last known position first (fastest)
-            let location = await Location.getLastKnownPositionAsync({
-                maxAge: 300_000, // 5 minutes
+            // 2. Multi-stage location retrieval strategy
+            let location: LocationObject | null;
+
+            // Stage A: Get Last Known (Instant fallback)
+            location = await Location.getLastKnownPositionAsync({
+                maxAge: 600_000, // 10 minutes is acceptable for "Nearby"
             });
 
-            // 4. If no last known position, try to get current position with timeout
+            // Stage B: Attempt fresh balanced fix if no last known
             if (!location) {
                 try {
+                    // Try with balanced accuracy first
                     location = await Location.getCurrentPositionAsync({
                         accuracy: Location.Accuracy.Balanced,
-                        timeInterval: 5000, // Hint for Android
                     });
-                } catch (currentError) {
-                    console.warn('getCurrentPositionAsync failed, retrying with Lowest accuracy:', currentError);
-                    // Final attempt with lowest accuracy and no timeout
-                    location = await Location.getCurrentPositionAsync({
-                        accuracy: Location.Accuracy.Lowest,
-                    });
+                } catch (e) {
+                    // Stage C: Final attempt with lowest accuracy (e.g. Cell Tower only)
+                    // This often resolves the 'kCLErrorDomain error 0'
+                    console.warn(e);
+                    try {
+                        location = await Location.getCurrentPositionAsync({
+                            accuracy: Location.Accuracy.Lowest,
+                        });
+                    } catch (finalError) {
+                        // All attempts failed
+                        console.warn(finalError);
+                        location = null;
+                    }
                 }
             }
 
             if (location) {
                 await updateLocation(location);
             } else {
-                setErrorMsg('Unable to determine your location at this time.');
+                setErrorMsg('Could not determine location (Weak GPS).');
             }
         } catch (error) {
-            console.error('Fatal location error:', error);
-            setErrorMsg('A problem occurred while accessing your location.');
+            // Catch-all for unexpected system errors - No more console.error to avoid spam
+            console.warn('Non-fatal location error occurred.', error);
+            setErrorMsg('Unable to access location data right now.');
         } finally {
             setIsLoading(false);
         }
@@ -89,7 +100,7 @@ const useLocation = () => {
 
     useEffect(() => {
         getUserLocation();
-    }, []); // Only run once on mount
+    }, []); 
 
     return { latitude, longitude, errorMsg, userGeocodedAddress, isLoading, refetchLocation: getUserLocation };
 }
