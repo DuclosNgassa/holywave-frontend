@@ -218,6 +218,12 @@ export const recipeCardStyles = StyleSheet.create({
         fontSize: 16,
         color: COLORS.text,
         lineHeight: 20,
+        marginBottom: 4,
+    },
+    description: {
+        ...(TYPOGRAPHY.bodySmall as TextStyle),
+        color: COLORS.textLight,
+        lineHeight: 20, // Slightly tighter for preview, but still follows hierarchy
         marginBottom: 8,
     },
     metaRow: {
@@ -225,24 +231,13 @@ export const recipeCardStyles = StyleSheet.create({
         alignItems: 'center',
         gap: 8,
     },
-    authorAvatar: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
-        backgroundColor: COLORS.background,
-    },
-    authorName: {
-        ...(TYPOGRAPHY.bodySmall as TextStyle),
-        fontSize: 13,
-        color: COLORS.textLight,
-    },
     dot: {
         color: COLORS.textLight,
         fontSize: 14,
     },
     dateText: {
         ...(TYPOGRAPHY.bodySmall as TextStyle),
-        fontSize: 13,
+        fontSize: 12,
         color: COLORS.textLight,
     },
     footer: {

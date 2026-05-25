@@ -49,15 +49,11 @@ const PostCard = ({ onLike, onSelectEvent, post, isLiked, imageSize }: PostCardP
                     {post.title}
                 </Text>
 
-                <View style={recipeCardStyles.metaRow}>
-                    <Image
-                        source={{ uri: 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }} // Placeholder
-                        style={recipeCardStyles.authorAvatar}
-                    />
-                    <Text style={recipeCardStyles.authorName}>{post.author || 'HolyWave'}</Text>
-                    <Text style={recipeCardStyles.dot}>•</Text>
-                    <Text style={recipeCardStyles.dateText}>Feb 27, 2023</Text>
-                </View>
+                {post.description && (
+                    <Text style={recipeCardStyles.description} numberOfLines={2}>
+                        {post.description}
+                    </Text>
+                )}
 
                 <View style={recipeCardStyles.footer}>
                     <View style={recipeCardStyles.feeContainer}>
