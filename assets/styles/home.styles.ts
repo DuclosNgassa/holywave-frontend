@@ -58,7 +58,7 @@ const homeStyles = StyleSheet.create({
         padding: 20,
     },
     featuredBadge: {
-        backgroundColor: COLORS.primary,
+        backgroundColor: COLORS.white,
         paddingHorizontal: 12,
         paddingVertical: 6,
         borderRadius: 20,
@@ -178,7 +178,7 @@ const homeStyles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        height: 120, // Height of the fade effect
+        height: 55, // Height of the fade effect
     },
 });
 
@@ -280,8 +280,8 @@ export const recipeCardStyles = StyleSheet.create({
 
 export const nearbyCardStyles = StyleSheet.create({
     container: {
-        width: width * 0.85,
-        height: 200,
+        width: width * 0.65,
+        height: 150,
         marginHorizontal: 8,
         borderRadius: 24,
         overflow: "hidden",
@@ -300,7 +300,12 @@ export const nearbyCardStyles = StyleSheet.create({
         height: "100%",
     },
     gradientOverlay: {
-        ...StyleSheet.absoluteFillObject,
+        //...StyleSheet.absoluteFillObject,
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 35,
         backgroundColor: "rgba(0,0,0,0.4)", // Fallback if LinearGradient is not used correctly
     },
     cardContent: {
@@ -374,6 +379,17 @@ export const nearbyCardStyles = StyleSheet.create({
     paginationDotActive: {
         width: 18,
         backgroundColor: COLORS.primary,
+    },
+    footer: {
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 4,
+    },
+    actionsRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12,
     },
 });
 

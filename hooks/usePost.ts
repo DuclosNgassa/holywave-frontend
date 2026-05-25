@@ -111,6 +111,7 @@ export const usePost = ({
       });
       queryClient.invalidateQueries({ queryKey: ["post", postId] });
       queryClient.invalidateQueries({ queryKey: ["userLikedPosts", userId] });
+      queryClient.invalidateQueries({ queryKey: ["nearbyPosts", userId] });
     },
     onError: (error: any) => {
       console.log("Like error:", error?.message);

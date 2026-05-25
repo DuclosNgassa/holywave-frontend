@@ -1,13 +1,13 @@
 import { View, Text, TouchableOpacity, Dimensions, type NativeScrollEvent, type NativeSyntheticEvent } from "react-native";
 import { Image } from "expo-image";
-import { nearbyCardStyles } from "@/assets/styles/home.styles";
+import homeStyles, {nearbyCardStyles, recipeCardStyles} from "@/assets/styles/home.styles";
 import { ImageSize } from "@/app/models/types";
 import { getOptimizedImage } from "@/utils/helper";
 import { FlatList } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import React, { useState } from "react";
 import type { Post } from "@/app/models/post";
+import ShareButton from "@/components/ShareButton";
 
 const { width } = Dimensions.get("window");
 
@@ -64,15 +64,31 @@ const NearByEvent = ({ events, onSelectEvent }: NearByEventProps) => {
                 </View>
 
                 <View style={nearbyCardStyles.bottomInfo}>
-                    <View style={nearbyCardStyles.metaRow}>
-                        <Text style={nearbyCardStyles.authorName}>{item.author || "HolyWave"}</Text>
-                        <MaterialCommunityIcons name="check-circle" size={14} color="#1DA1F2" />
-                        <Text style={nearbyCardStyles.bullet}>•</Text>
-                        <Text style={nearbyCardStyles.timeText}>Trending</Text>
+
+                    <View style={recipeCardStyles.footer}>
+                        <View style={recipeCardStyles.feeContainer}>
+                            <Text style={nearbyCardStyles.title} numberOfLines={2}>
+                                {item.title}
+                            </Text>
+                        </View>
+
+                        <View style={recipeCardStyles.actionsRow}>
+                            <View style={homeStyles.featuredBadge}>
+                            <View style={recipeCardStyles.feeContainer}>
+                                <Text style={recipeCardStyles.feeText}>{item.fee ? `$${item.fee}` : 'FREE'}</Text>
+                            </View>
+                            </View>
+                            <View style={homeStyles.featuredBadge}>
+
+                            <ShareButton
+                                title={item.title}
+                                text='Check out this awesome event'
+                                url={item.image}
+                                style={recipeCardStyles.actionIcon}
+                            />
+                        </View>
+                        </View>
                     </View>
-                    <Text style={nearbyCardStyles.title} numberOfLines={2}>
-                        {item.title}
-                    </Text>
                 </View>
             </View>
         </TouchableOpacity>

@@ -1,13 +1,11 @@
-import { postApi, useApiClient } from "@/utils/api"
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {postApi, useApiClient} from "@/utils/api"
+import {useQuery} from "@tanstack/react-query";
 import useLocation from "./useLocation";
 
 
-export const useNearbyPost = () => {
+export const useNearbyPost = ({ userId }: { userId?: string } = {}) => {
     const api = useApiClient();
-    const queryClient = useQueryClient();
-    const { longitude, latitude, userGeocodedAddress, errorMsg } = useLocation();
-    //console.log("User location in home is: ", userGeocodedAddress);
+    const { userGeocodedAddress } = useLocation();
 
     const {
         data: posts,
@@ -15,14 +13,14 @@ export const useNearbyPost = () => {
         error,
         refetch,
     } = useQuery({
-        queryKey: ["nearbyPosts"],
+        queryKey: ["nearbyPosts", userId], // Include userId in queryKey for cache isolation
         queryFn: () => postApi.getNearbyPosts(
             api, userGeocodedAddress?.country,
             userGeocodedAddress?.region,
             userGeocodedAddress?.postalCode,
             userGeocodedAddress?.city
         ),
-        enabled: !!userGeocodedAddress,
+        enabled: !!userGeocodedAddress && !!userId, // Only run if we have location AND a user
         select: (response) => response.data.posts
     });
 

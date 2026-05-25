@@ -51,4 +51,4 @@ export enum ImageSize {
     Small = "SMALL",
     Medium = "MEDIUM",
     Big = "BIG",
- };
+ }
